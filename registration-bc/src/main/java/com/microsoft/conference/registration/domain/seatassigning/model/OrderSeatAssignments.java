@@ -6,8 +6,8 @@ import com.microsoft.conference.registration.domain.order.model.OrderLine;
 import com.microsoft.conference.registration.domain.seatassigning.event.OrderSeatAssignmentsCreated;
 import com.microsoft.conference.registration.domain.seatassigning.event.SeatAssigned;
 import com.microsoft.conference.registration.domain.seatassigning.event.SeatUnassigned;
-import org.enodeframework.common.utilities.Ensure;
-import org.enodeframework.common.utilities.IdGenerator;
+import org.enodeframework.common.utils.Assert;
+import org.enodeframework.common.utils.IdGenerator;
 import org.enodeframework.domain.AggregateRoot;
 
 import java.util.ArrayList;
@@ -21,8 +21,8 @@ public class OrderSeatAssignments extends AggregateRoot<String> {
 
     public OrderSeatAssignments(String orderId, List<OrderLine> orderLines) {
         super(IdGenerator.nextId());
-        Ensure.notNullOrEmpty(orderId, "orderId");
-        Ensure.notNull(orderLines, "orderLines");
+        Assert.nonNull(orderId, "orderId");
+        Assert.nonNull(orderLines, "orderLines");
         if (orderLines.isEmpty()) {
             throw new IllegalArgumentException("The seats of order cannot be empty.");
         }

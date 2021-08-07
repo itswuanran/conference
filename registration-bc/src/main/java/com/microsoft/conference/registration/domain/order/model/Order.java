@@ -11,8 +11,8 @@ import com.microsoft.conference.registration.domain.order.event.OrderRegistrantA
 import com.microsoft.conference.registration.domain.order.event.OrderReservationConfirmed;
 import com.microsoft.conference.registration.domain.order.event.OrderSuccessed;
 import com.microsoft.conference.registration.domain.seatassigning.model.OrderSeatAssignments;
-import org.enodeframework.common.utilities.Ensure;
-import org.enodeframework.common.utilities.IdGenerator;
+import org.enodeframework.common.utils.Assert;
+import org.enodeframework.common.utils.IdGenerator;
 import org.enodeframework.domain.AggregateRoot;
 
 import java.util.Date;
@@ -31,10 +31,10 @@ public class Order extends AggregateRoot<String> {
 
     public Order(String id, String conferenceId, List<SeatQuantity> seats, PricingService pricingService) {
         super(id);
-        Ensure.notNullOrEmpty(id, "id");
-        Ensure.notNullOrEmpty(conferenceId, "conferenceId");
-        Ensure.notNull(seats, "seats");
-        Ensure.notNull(pricingService, "pricingService");
+        Assert.nonNull(id, "id");
+        Assert.nonNull(conferenceId, "conferenceId");
+        Assert.nonNull(seats, "seats");
+        Assert.nonNull(pricingService, "pricingService");
         if (seats.isEmpty()) {
             throw new IllegalArgumentException("The seats of order cannot be empty.");
         }

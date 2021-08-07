@@ -1328,7 +1328,7 @@ public void ThenTheCommandToRegisterTheSelectedOrderItemsIsReceived()
     var orderRepo = EventSourceHelper.GetRepository<Registration.Order>();
     Registration.Order order = orderRepo.Find(orderId);
 
-    Assert.NotNull(order);
+    Assert.nonNull(order);
     Assert.Equal(orderId, order.Id);
 }
 
@@ -1337,7 +1337,7 @@ public void ThenTheEventForOrderPlacedIsEmitted()
 {
     var orderPlaced = MessageLogHelper.GetEvents<OrderPlaced>(orderId).SingleOrDefault();
             
-    Assert.NotNull(orderPlaced);
+    Assert.nonNull(orderPlaced);
     Assert.True(orderPlaced.Seats.All(
         os => registerToConference.Seats.Count(cs => cs.SeatType == os.SeatType && cs.Quantity == os.Quantity) == 1));
 }

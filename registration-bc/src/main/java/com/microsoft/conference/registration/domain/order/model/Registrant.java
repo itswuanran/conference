@@ -2,7 +2,7 @@ package com.microsoft.conference.registration.domain.order.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.enodeframework.common.utilities.Ensure;
+import org.enodeframework.common.utils.Assert;
 
 @Getter
 @Setter
@@ -15,9 +15,9 @@ public class Registrant {
     }
 
     public Registrant(String firstName, String lastName, String email) {
-        Ensure.notNull(firstName, "firstName");
-        Ensure.notNull(lastName, "lastName");
-        Ensure.notNull(email, "email");
+        Assert.nonNull(firstName, "firstName");
+        Assert.nonNull(lastName, "lastName");
+        Assert.nonNull(email, "email");
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
