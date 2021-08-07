@@ -3,7 +3,7 @@ package com.microsoft.conference.common.registration.commands.order;
 import lombok.Getter;
 import lombok.Setter;
 import org.enodeframework.commanding.Command;
-import org.enodeframework.common.utilities.IdGenerator;
+import org.enodeframework.common.utils.IdGenerator;
 
 import java.util.ArrayList;
 import java.util.List;

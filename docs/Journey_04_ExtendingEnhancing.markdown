@@ -1174,7 +1174,7 @@ public void GivenTheRegistrantProceedToMakeTheReservation()
     var redirect = registrationController.StartRegistration(
         registration, registrationController.ViewBag.OrderVersion) as RedirectToRouteResult;
 
-    Assert.NotNull(redirect);
+    Assert.nonNull(redirect);
 
     // Perform external redirection
     var timeout =  DateTime.Now.Add(Constants.UI.WaitTimeout);
@@ -1210,14 +1210,14 @@ public void WhenTheRegistrantProceedToConfirmThePayment()
 public void ThenTheOrderShouldBeCreatedWithTheFollowingOrderItems(Table table)
 {
     draftOrder = RegistrationHelper.GetModel<DraftOrder>(registrationController.ThankYou(registrationViewModel.Order.OrderId));
-    Assert.NotNull(draftOrder);
+    Assert.nonNull(draftOrder);
 
     foreach (var row in table.Rows)
     {
         var orderItem = draftOrder.Lines.FirstOrDefault(
             l => l.SeatType == conferenceInfo.Seats.First(s => s.Description == row["seat type"]).Id);
 
-        Assert.NotNull(orderItem);
+        Assert.nonNull(orderItem);
         Assert.Equal(Int32.Parse(row["quantity"]), orderItem.ReservedSeats);
     }
 }

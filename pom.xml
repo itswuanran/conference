@@ -18,7 +18,7 @@
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
         <lombok.version>1.18.20</lombok.version>
-        <enode.version>1.0.18</enode.version>
+        <enode.version>1.0.21</enode.version>
         <revision>1.0.0</revision>
         <maven.skip.deploy>false</maven.skip.deploy>
         <maven.jar.version>3.2.0</maven.jar.version>
