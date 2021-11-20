@@ -1,10 +1,6 @@
 package com.microsoft.conference.management.messagepublishers;
 
-import com.microsoft.conference.common.management.message.SeatInsufficientMessage;
-import com.microsoft.conference.common.management.message.SeatReservationItem;
-import com.microsoft.conference.common.management.message.SeatsReservationCancelledMessage;
-import com.microsoft.conference.common.management.message.SeatsReservationCommittedMessage;
-import com.microsoft.conference.common.management.message.SeatsReservedMessage;
+import com.microsoft.conference.common.management.message.*;
 import com.microsoft.conference.management.domain.event.SeatsReservationCancelled;
 import com.microsoft.conference.management.domain.event.SeatsReservationCommitted;
 import com.microsoft.conference.management.domain.event.SeatsReserved;
@@ -13,12 +9,10 @@ import org.enodeframework.annotation.Event;
 import org.enodeframework.annotation.Subscribe;
 import org.enodeframework.messaging.IApplicationMessage;
 import org.enodeframework.messaging.IMessagePublisher;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
-import static org.enodeframework.common.io.Task.await;
-
 
 /**
  * IMessageHandler<SeatsReserved>,
@@ -29,11 +23,11 @@ import static org.enodeframework.common.io.Task.await;
 @Event
 public class ConferenceMessagePublisher {
 
-    @Autowired
+    @Resource
     private IMessagePublisher<IApplicationMessage> messagePublisher;
 
     @Subscribe
-    public void handleAsync(SeatsReserved evnt) {
+    public CompletableFuture<Boolean> handleAsync(SeatsReserved evnt) {
         SeatsReservedMessage message = new SeatsReservedMessage();
         message.conferenceId = evnt.getAggregateRootId();
         message.reservationId = evnt.getReservationId();
@@ -43,30 +37,30 @@ public class ConferenceMessagePublisher {
             item.quantity = x.getQuantity();
             return item;
         }).collect(Collectors.toList());
-        await(messagePublisher.publishAsync(message));
+        return (messagePublisher.publishAsync(message));
     }
 
     @Subscribe
-    public void handleAsync(SeatsReservationCommitted evnt) {
+    public CompletableFuture<Boolean> handleAsync(SeatsReservationCommitted evnt) {
         SeatsReservationCommittedMessage message = new SeatsReservationCommittedMessage();
         message.conferenceId = evnt.getAggregateRootId();
         message.reservationId = evnt.getReservationId();
-        await(messagePublisher.publishAsync(message));
+        return (messagePublisher.publishAsync(message));
     }
 
     @Subscribe
-    public void handleAsync(SeatsReservationCancelled evnt) {
+    public CompletableFuture<Boolean> handleAsync(SeatsReservationCancelled evnt) {
         SeatsReservationCancelledMessage message = new SeatsReservationCancelledMessage();
         message.conferenceId = evnt.getAggregateRootId();
         message.reservationId = evnt.getReservationId();
-        await(messagePublisher.publishAsync(message));
+        return (messagePublisher.publishAsync(message));
     }
 
     @Subscribe
-    public void handleAsync(SeatInsufficientException exception) {
+    public CompletableFuture<Boolean> handleAsync(SeatInsufficientException exception) {
         SeatInsufficientMessage message = new SeatInsufficientMessage();
         message.conferenceId = exception.conferenceId;
         message.reservationId = exception.reservationId;
-        await(messagePublisher.publishAsync(message));
+        return (messagePublisher.publishAsync(message));
     }
 }

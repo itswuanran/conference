@@ -5,15 +5,10 @@ import com.microsoft.conference.common.dataobject.OrderDO;
 import com.microsoft.conference.common.dataobject.OrderLineDO;
 import com.microsoft.conference.common.mapper.OrderLineMapper;
 import com.microsoft.conference.common.mapper.OrderMapper;
-import com.microsoft.conference.registration.domain.order.event.OrderClosed;
-import com.microsoft.conference.registration.domain.order.event.OrderExpired;
-import com.microsoft.conference.registration.domain.order.event.OrderPaymentConfirmed;
-import com.microsoft.conference.registration.domain.order.event.OrderPlaced;
-import com.microsoft.conference.registration.domain.order.event.OrderRegistrantAssigned;
-import com.microsoft.conference.registration.domain.order.event.OrderReservationConfirmed;
-import com.microsoft.conference.registration.domain.order.event.OrderSuccessed;
+import com.microsoft.conference.registration.domain.order.event.*;
 import com.microsoft.conference.registration.domain.order.model.OrderStatus;
 import org.enodeframework.annotation.Event;
+import org.enodeframework.annotation.Subscribe;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -28,6 +23,7 @@ public class OrderViewModelGenerator {
     @Autowired
     private OrderLineMapper orderLineMapper;
 
+    @Subscribe
     public void handleAsync(OrderPlaced evnt) {
 
         //插入订单主记录
@@ -43,7 +39,7 @@ public class OrderViewModelGenerator {
 
     }
 
-
+    @Subscribe
     public void handleAsync(OrderRegistrantAssigned evnt) {
         OrderDO orderDO = OrderConvert.INSTANCE.toDO(evnt);
         LambdaUpdateWrapper<OrderDO> wrapper = new LambdaUpdateWrapper<>();
@@ -52,6 +48,7 @@ public class OrderViewModelGenerator {
         orderMapper.update(orderDO, wrapper);
     }
 
+    @Subscribe
     public void handleAsync(OrderReservationConfirmed evnt) {
         OrderDO orderDO = new OrderDO();
         orderDO.setStatus(evnt.getOrderStatus().getStatus());
@@ -62,6 +59,7 @@ public class OrderViewModelGenerator {
         orderMapper.update(orderDO, wrapper);
     }
 
+    @Subscribe
     public void handleAsync(OrderPaymentConfirmed evnt) {
         OrderDO orderDO = new OrderDO();
         orderDO.setStatus(evnt.getOrderStatus().getStatus());
@@ -72,6 +70,7 @@ public class OrderViewModelGenerator {
         orderMapper.update(orderDO, wrapper);
     }
 
+    @Subscribe
     public void handleAsync(OrderExpired evnt) {
         OrderDO orderDO = new OrderDO();
         orderDO.setStatus(OrderStatus.Expired.getStatus());
@@ -82,6 +81,7 @@ public class OrderViewModelGenerator {
         orderMapper.update(orderDO, wrapper);
     }
 
+    @Subscribe
     public void handleAsync(OrderClosed evnt) {
         OrderDO orderDO = new OrderDO();
         orderDO.setStatus(OrderStatus.Closed.getStatus());
@@ -92,6 +92,7 @@ public class OrderViewModelGenerator {
         orderMapper.update(orderDO, wrapper);
     }
 
+    @Subscribe
     public void handleAsync(OrderSuccessed evnt) {
         OrderDO orderDO = new OrderDO();
         orderDO.setStatus(OrderStatus.Success.getStatus());

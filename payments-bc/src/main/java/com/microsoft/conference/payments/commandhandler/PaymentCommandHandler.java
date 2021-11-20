@@ -10,9 +10,8 @@ import org.enodeframework.annotation.Subscribe;
 import org.enodeframework.commanding.ICommandContext;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
-import static org.enodeframework.common.io.Task.await;
 
 /**
  * ICommandHandler<CreatePayment>,
@@ -35,14 +34,14 @@ public class PaymentCommandHandler {
     }
 
     @Subscribe
-    public void handleAsync(ICommandContext context, CompletePayment command) {
-        Payment payment = await(context.getAsync(command.getAggregateRootId(), Payment.class));
-        payment.complete();
+    public CompletableFuture<Void> handleAsync(ICommandContext context, CompletePayment command) {
+        return context.getAsync(command.getAggregateRootId(), Payment.class)
+                .thenAccept(payment -> payment.complete());
     }
 
     @Subscribe
-    public void handleAsync(ICommandContext context, CancelPayment command) {
-        Payment payment = await(context.getAsync(command.getAggregateRootId(), Payment.class));
-        payment.cancel();
+    public CompletableFuture<Void> handleAsync(ICommandContext context, CancelPayment command) {
+        return context.getAsync(command.getAggregateRootId(), Payment.class)
+                .thenAccept(payment -> payment.cancel());
     }
 }

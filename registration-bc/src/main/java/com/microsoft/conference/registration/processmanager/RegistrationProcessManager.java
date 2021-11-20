@@ -20,37 +20,37 @@ import com.microsoft.conference.registration.domain.order.event.OrderPaymentConf
 import com.microsoft.conference.registration.domain.order.event.OrderPlaced;
 import com.microsoft.conference.registration.domain.order.event.OrderSuccessed;
 import com.microsoft.conference.registration.domain.order.model.OrderStatus;
+import org.enodeframework.annotation.Event;
+import org.enodeframework.annotation.Subscribe;
 import org.enodeframework.commanding.ICommandService;
 import org.enodeframework.common.io.Task;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
  * IMessageHandler<OrderPlaced>,                           //订单创建时发生(Order)
- * <p>
  * IMessageHandler<SeatsReservedMessage>,                  //预扣库存，成功时发生(Conference)
  * IMessageHandler<SeatInsufficientMessage>,               //预扣库存，库存不足时发生(Conference)
- * <p>
  * IMessageHandler<PaymentCompletedMessage>,               //支付成功时发生(Payment)
  * IMessageHandler<PaymentRejectedMessage>,                //支付拒绝时发生(Payment)
- * <p>
  * IMessageHandler<OrderPaymentConfirmed>,                 //确认支付时发生(Order)
- * <p>
  * IMessageHandler<SeatsReservationCommittedMessage>,      //预扣库存提交时发生(Conference)
  * IMessageHandler<SeatsReservationCancelledMessage>,      //预扣库存取消时发生(Conference)
- * <p>
  * IMessageHandler<OrderSuccessed>,                        //订单处理成功时发生(Order)
- * <p>
  * IMessageHandler<OrderExpired>                           //订单过期时(15分钟过期)发生(Order)
  */
+@Event
 public class RegistrationProcessManager {
+
     private final ICommandService commandService;
 
     public RegistrationProcessManager(ICommandService commandService) {
         this.commandService = commandService;
     }
 
-    public void handleAsync(OrderPlaced evnt) {
+    @Subscribe
+    public CompletableFuture<Boolean> handleAsync(OrderPlaced evnt) {
         MakeSeatReservation reservation = new MakeSeatReservation(evnt.getConferenceId());
         reservation.reservationId = evnt.getAggregateRootId();
         reservation.seats = evnt.getOrderTotal().getOrderLines().stream().map(x -> {
@@ -59,47 +59,57 @@ public class RegistrationProcessManager {
             itemInfo.quantity = x.getSeatQuantity().getQuantity();
             return itemInfo;
         }).collect(Collectors.toList());
-        Task.await(commandService.sendAsync(reservation));
+        return (commandService.sendAsync(reservation));
     }
 
-    public void handleAsync(SeatsReservedMessage message) {
-        Task.await(commandService.sendAsync(new ConfirmReservation(message.reservationId, true)));
+    @Subscribe
+    public CompletableFuture<Boolean> handleAsync(SeatsReservedMessage message) {
+        return (commandService.sendAsync(new ConfirmReservation(message.reservationId, true)));
     }
 
-    public void handleAsync(SeatInsufficientMessage message) {
-        Task.await(commandService.sendAsync(new ConfirmReservation(message.reservationId, false)));
+    @Subscribe
+    public CompletableFuture<Boolean> handleAsync(SeatInsufficientMessage message) {
+        return (commandService.sendAsync(new ConfirmReservation(message.reservationId, false)));
     }
 
-    public void handleAsync(PaymentCompletedMessage message) {
-        Task.await(commandService.sendAsync(new ConfirmPayment(message.orderId, true)));
+    @Subscribe
+    public CompletableFuture<Boolean> handleAsync(PaymentCompletedMessage message) {
+        return (commandService.sendAsync(new ConfirmPayment(message.orderId, true)));
     }
 
-    public void handleAsync(PaymentRejectedMessage message) {
-        Task.await(commandService.sendAsync(new ConfirmPayment(message.orderId, false)));
+    @Subscribe
+    public CompletableFuture<Boolean> handleAsync(PaymentRejectedMessage message) {
+        return (commandService.sendAsync(new ConfirmPayment(message.orderId, false)));
     }
 
-    public void handleAsync(OrderPaymentConfirmed evnt) {
+    @Subscribe
+    public CompletableFuture<Boolean> handleAsync(OrderPaymentConfirmed evnt) {
         if (OrderStatus.PaymentSuccess == evnt.getOrderStatus()) {
-            Task.await(commandService.sendAsync(new CommitSeatReservation(evnt.getConferenceId(), evnt.getAggregateRootId())));
+            return (commandService.sendAsync(new CommitSeatReservation(evnt.getConferenceId(), evnt.getAggregateRootId())));
         } else if (evnt.getOrderStatus() == OrderStatus.PaymentRejected) {
-            Task.await(commandService.sendAsync(new CancelSeatReservation(evnt.getConferenceId(), evnt.getAggregateRootId())));
+            return (commandService.sendAsync(new CancelSeatReservation(evnt.getConferenceId(), evnt.getAggregateRootId())));
         }
+        return Task.completedTask;
     }
 
-    public void handleAsync(SeatsReservationCommittedMessage message) {
-        Task.await(commandService.sendAsync(new MarkAsSuccess(message.reservationId)));
+    @Subscribe
+    public CompletableFuture<Boolean> handleAsync(SeatsReservationCommittedMessage message) {
+        return (commandService.sendAsync(new MarkAsSuccess(message.reservationId)));
     }
 
-    public void handleAsync(SeatsReservationCancelledMessage message) {
-        Task.await(commandService.sendAsync(new CloseOrder(message.reservationId)));
+    @Subscribe
+    public CompletableFuture<Boolean> handleAsync(SeatsReservationCancelledMessage message) {
+        return (commandService.sendAsync(new CloseOrder(message.reservationId)));
     }
 
-    public void handleAsync(OrderSuccessed evnt) {
-        Task.await(commandService.sendAsync(new CreateSeatAssignments(evnt.getAggregateRootId())));
+    @Subscribe
+    public CompletableFuture<Boolean> handleAsync(OrderSuccessed evnt) {
+        return (commandService.sendAsync(new CreateSeatAssignments(evnt.getAggregateRootId())));
     }
 
-    public void handleAsync(OrderExpired evnt) {
-        Task.await(commandService.sendAsync(new CancelSeatReservation(evnt.getConferenceId(), evnt.getAggregateRootId())));
+    @Subscribe
+    public CompletableFuture<Boolean> handleAsync(OrderExpired evnt) {
+        return (commandService.sendAsync(new CancelSeatReservation(evnt.getConferenceId(), evnt.getAggregateRootId())));
     }
 }
         

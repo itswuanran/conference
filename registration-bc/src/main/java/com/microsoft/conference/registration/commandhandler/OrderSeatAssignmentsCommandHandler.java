@@ -10,30 +10,42 @@ import org.enodeframework.annotation.Command;
 import org.enodeframework.annotation.Subscribe;
 import org.enodeframework.commanding.ICommandContext;
 
-import static org.enodeframework.common.io.Task.await;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 @Command
 public class OrderSeatAssignmentsCommandHandler {
 
     @Subscribe
-    public void handleAsync(ICommandContext context, CreateSeatAssignments command) {
-        Order order = await(context.getAsync(command.aggregateRootId, Order.class));
-        OrderSeatAssignments orderSeatAssignments = order.createSeatAssignments();
-        context.add(orderSeatAssignments);
+    public CompletableFuture<Boolean> handleAsync(ICommandContext context, CreateSeatAssignments command) {
+        return context.getAsync(command.aggregateRootId, Order.class).thenCompose(order -> {
+            OrderSeatAssignments orderSeatAssignments = order.createSeatAssignments();
+            return context.addAsync(orderSeatAssignments);
+        });
     }
 
     @Subscribe
-    public void handleAsync(ICommandContext context, AssignSeat command) {
-        OrderSeatAssignments orderSeatAssignments = await(context.getAsync(command.aggregateRootId, OrderSeatAssignments.class));
-        orderSeatAssignments.assignSeat(command.getPosition(), new Attendee(
-                command.getPersonalInfo().getFirstName(),
-                command.getPersonalInfo().getLastName(),
-                command.getPersonalInfo().getEmail()));
+    public CompletableFuture<Void> handleAsync(ICommandContext context, AssignSeat command) {
+        return orderSeatHandler(context, command.aggregateRootId, orderSeatAssignments -> {
+            orderSeatAssignments.assignSeat(command.getPosition(), new Attendee(
+                    command.getPersonalInfo().getFirstName(),
+                    command.getPersonalInfo().getLastName(),
+                    command.getPersonalInfo().getEmail()));
+        });
     }
 
     @Subscribe
-    public void handleAsync(ICommandContext context, UnassignSeat command) {
-        OrderSeatAssignments orderSeatAssignments = await(context.getAsync(command.aggregateRootId, OrderSeatAssignments.class));
-        orderSeatAssignments.unAssignSeat(command.getPosition());
+    public CompletableFuture<Void> handleAsync(ICommandContext context, UnassignSeat command) {
+        return orderSeatHandler(context, command.aggregateRootId, orderSeatAssignments -> {
+            orderSeatAssignments.unAssignSeat(command.getPosition());
+        });
+    }
+
+    private CompletableFuture<Void> orderSeatHandler(ICommandContext context, String id, Consumer<OrderSeatAssignments> consumer) {
+        return context.getAsync(id, OrderSeatAssignments.class).thenAccept(orderSeatAssignments -> {
+            consumer.accept(orderSeatAssignments);
+        }).exceptionally(throwable -> {
+            return null;
+        });
     }
 }

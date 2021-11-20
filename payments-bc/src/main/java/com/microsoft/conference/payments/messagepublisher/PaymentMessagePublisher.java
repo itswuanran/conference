@@ -8,14 +8,14 @@ import org.enodeframework.annotation.Event;
 import org.enodeframework.annotation.Subscribe;
 import org.enodeframework.messaging.IApplicationMessage;
 import org.enodeframework.messaging.IMessagePublisher;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.enodeframework.common.io.Task.await;
+import javax.annotation.Resource;
+import java.util.concurrent.CompletableFuture;
 
 @Event
 public class PaymentMessagePublisher {
 
-    @Autowired
+    @Resource
     private final IMessagePublisher<IApplicationMessage> messagePublisher;
 
     public PaymentMessagePublisher(IMessagePublisher<IApplicationMessage> messagePublisher) {
@@ -23,20 +23,20 @@ public class PaymentMessagePublisher {
     }
 
     @Subscribe
-    public void handleAsync(PaymentCompleted evnt) {
+    public CompletableFuture<Boolean> handleAsync(PaymentCompleted evnt) {
         PaymentCompletedMessage message = new PaymentCompletedMessage();
         message.paymentId = evnt.getAggregateRootId();
         message.conferenceId = evnt.getConferenceId();
         message.orderId = evnt.getOrderId();
-        await(messagePublisher.publishAsync(message));
+        return (messagePublisher.publishAsync(message));
     }
 
     @Subscribe
-    public void handleAsync(PaymentRejected evnt) {
+    public CompletableFuture<Boolean> handleAsync(PaymentRejected evnt) {
         PaymentRejectedMessage message = new PaymentRejectedMessage();
         message.paymentId = evnt.getAggregateRootId();
         message.conferenceId = evnt.getConferenceId();
         message.orderId = evnt.getOrderId();
-        await(messagePublisher.publishAsync(message));
+        return (messagePublisher.publishAsync(message));
     }
 }

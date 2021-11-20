@@ -18,7 +18,7 @@
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
         <lombok.version>1.18.20</lombok.version>
-        <enode.version>1.0.21</enode.version>
+        <enode.version>1.0.24</enode.version>
         <revision>1.0.0</revision>
         <maven.skip.deploy>false</maven.skip.deploy>
         <maven.jar.version>3.2.0</maven.jar.version>
@@ -31,23 +31,15 @@
         <maven.gpg.version>1.6</maven.gpg.version>
         <maven.flatten.version>1.2.7</maven.flatten.version>
         <dokka.version>1.4.32</dokka.version>
-        <kotlin.version>1.4.32</kotlin.version>
-        <kotlinx-coroutines.version>1.4.3</kotlinx-coroutines.version>
         <slfj4.version>1.7.30</slfj4.version>
         <guava.version>30.1.1-jre</guava.version>
         <jackson.version>2.12.3</jackson.version>
-        <mongodb.version>4.2.3</mongodb.version>
         <junit.version>4.13.2</junit.version>
         <jmh.version>1.29</jmh.version>
-        <rocketmq.version>4.8.0</rocketmq.version>
-        <ons.version>1.8.8.Final</ons.version>
-        <hbase.version>2.4.2</hbase.version>
-        <rxjava.version>3.0.12</rxjava.version>
-        <sentinel.version>1.8.1</sentinel.version>
-        <pulsar.version>2.7.2</pulsar.version>
+        <kotlin.version>1.5.31</kotlin.version>
         <mysql.version>8.0.24</mysql.version>
         <reflections.version>0.9.12</reflections.version>
-        <vertx.version>4.0.3</vertx.version>
+        <vertx.version>4.2.1</vertx.version>
         <spring-boot.version>2.4.5</spring-boot.version>
     </properties>
 

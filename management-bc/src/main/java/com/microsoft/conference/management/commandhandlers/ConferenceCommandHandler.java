@@ -6,24 +6,24 @@ import com.microsoft.conference.management.domain.service.RegisterConferenceSlug
 import org.enodeframework.annotation.Command;
 import org.enodeframework.annotation.Subscribe;
 import org.enodeframework.commanding.ICommandContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import static org.enodeframework.common.io.Task.await;
 
 @Command
 public class ConferenceCommandHandler {
 
-    @Autowired
+    @Resource
     private RegisterConferenceSlugService registerConferenceSlugService;
 
     @Subscribe
-    public void handleAsync(ICommandContext context, CreateConference command) {
-        execInternal(context, command);
+    public CompletableFuture<Boolean> handleAsync(ICommandContext context, CreateConference command) {
+        return execInternal(context, command);
     }
 
-    private void execInternal(ICommandContext context, CreateConference command) {
+    private CompletableFuture<Boolean> execInternal(ICommandContext context, CreateConference command) {
         Conference conference = new Conference(command.getAggregateRootId(), new ConferenceInfo(
                 command.getAccessCode(),
                 new ConferenceOwner(command.getOwnerName(), command.getOwnerEmail()),
@@ -36,73 +36,91 @@ public class ConferenceCommandHandler {
                 command.getStartDate(),
                 command.getEndDate()));
         registerConferenceSlugService.registerSlug(command.getId(), conference.getId(), command.getSlug());
-        context.add(conference);
+        return context.addAsync(conference);
     }
 
     @Subscribe
-    public void handleAsync(ICommandContext context, UpdateConference command) {
-        Conference conference = await(context.getAsync(command.getAggregateRootId(), Conference.class));
-        conference.update(new ConferenceEditableInfo(
-                command.name,
-                command.description,
-                command.location,
-                command.tagline,
-                command.twitterSearch,
-                command.startDate,
-                command.endDate));
+    public CompletableFuture<Void> handleAsync(ICommandContext context, UpdateConference command) {
+        return conferenceHandler(context, command.getAggregateRootId(), conference -> {
+            conference.update(new ConferenceEditableInfo(
+                    command.name,
+                    command.description,
+                    command.location,
+                    command.tagline,
+                    command.twitterSearch,
+                    command.startDate,
+                    command.endDate));
+        });
     }
 
     @Subscribe
-    public void handleAsync(ICommandContext context, PublishConference command) {
-        Conference conference = await(context.getAsync(command.getAggregateRootId(), Conference.class));
-        conference.publish();
+    public CompletableFuture<Void> handleAsync(ICommandContext context, PublishConference command) {
+        return conferenceHandler(context, command.getAggregateRootId(), conference -> {
+            conference.publish();
+        });
     }
 
     @Subscribe
-    public void handleAsync(ICommandContext context, UnpublishConference command) {
-        Conference conference = await(context.getAsync(command.getAggregateRootId(), Conference.class));
-        conference.unpublish();
+    public CompletableFuture<Void> handleAsync(ICommandContext context, UnpublishConference command) {
+        return conferenceHandler(context, command.getAggregateRootId(), conference -> {
+            conference.unpublish();
+        });
     }
 
     @Subscribe
-    public void handleAsync(ICommandContext context, AddSeatType command) {
-        Conference conference = await(context.getAsync(command.getAggregateRootId(), Conference.class));
-        conference.addSeat(new SeatTypeInfo(
-                command.name,
-                command.description,
-                command.price), command.quantity);
+    public CompletableFuture<Void> handleAsync(ICommandContext context, AddSeatType command) {
+        return conferenceHandler(context, command.getAggregateRootId(), conference -> {
+            conference.addSeat(new SeatTypeInfo(
+                    command.name,
+                    command.description,
+                    command.price), command.quantity);
+        });
     }
 
     @Subscribe
-    public void handleAsync(ICommandContext context, RemoveSeatType command) {
-        Conference conference = await(context.getAsync(command.getAggregateRootId(), Conference.class));
-        conference.removeSeat(command.getSeatTypeId());
+    public CompletableFuture<Void> handleAsync(ICommandContext context, RemoveSeatType command) {
+        return conferenceHandler(context, command.getAggregateRootId(), conference -> {
+            conference.removeSeat(command.getSeatTypeId());
+        });
     }
 
     @Subscribe
-    public void handleAsync(ICommandContext context, UpdateSeatType command) {
-        Conference conference = await(context.getAsync(command.getAggregateRootId(), Conference.class));
-        conference.updateSeat(
-                command.seatTypeId,
-                new SeatTypeInfo(command.name, command.description, command.price),
-                command.quantity);
+    public CompletableFuture<Void> handleAsync(ICommandContext context, UpdateSeatType command) {
+        return conferenceHandler(context, command.getAggregateRootId(), conference -> {
+            conference.updateSeat(
+                    command.seatTypeId,
+                    new SeatTypeInfo(command.name, command.description, command.price),
+                    command.quantity);
+        });
     }
 
     @Subscribe
-    public void handleAsync(ICommandContext context, MakeSeatReservation command) {
-        Conference conference = await(context.getAsync(command.getAggregateRootId(), Conference.class));
-        conference.makeReservation(command.reservationId, command.seats.stream().map(x -> new ReservationItem(x.seatType, x.quantity)).collect(Collectors.toList()));
+    public CompletableFuture<Void> handleAsync(ICommandContext context, MakeSeatReservation command) {
+        return conferenceHandler(context, command.getAggregateRootId(), conference -> {
+            conference.makeReservation(command.reservationId, command.seats.stream().map(x -> new ReservationItem(x.seatType, x.quantity)).collect(Collectors.toList()));
+        });
     }
 
     @Subscribe
-    public void handleAsync(ICommandContext context, CommitSeatReservation command) {
-        Conference conference = await(context.getAsync(command.getAggregateRootId(), Conference.class));
-        conference.commitReservation(command.reservationId);
+    public CompletableFuture<Void> handleAsync(ICommandContext context, CommitSeatReservation command) {
+        return conferenceHandler(context, command.getAggregateRootId(), conference -> {
+            conference.commitReservation(command.reservationId);
+        });
+
     }
 
     @Subscribe
-    public void handleAsync(ICommandContext context, CancelSeatReservation command) {
-        Conference conference = await(context.getAsync(command.getAggregateRootId(), Conference.class));
-        conference.cancelReservation(command.reservationId);
+    public CompletableFuture<Void> handleAsync(ICommandContext context, CancelSeatReservation command) {
+        return conferenceHandler(context, command.getAggregateRootId(), conference -> {
+            conference.cancelReservation(command.reservationId);
+        });
+    }
+
+    private CompletableFuture<Void> conferenceHandler(ICommandContext context, String id, Consumer<Conference> consumer) {
+        return context.getAsync(id, Conference.class).thenAccept(x -> {
+            consumer.accept(x);
+        }).exceptionally(throwable -> {
+            return null;
+        });
     }
 }

@@ -7,17 +7,7 @@ import com.microsoft.conference.common.dataobject.SeatTypeDO;
 import com.microsoft.conference.common.mapper.ConferenceMapper;
 import com.microsoft.conference.common.mapper.ReservationItemMapper;
 import com.microsoft.conference.common.mapper.SeatTypeMapper;
-import com.microsoft.conference.management.domain.event.ConferenceCreated;
-import com.microsoft.conference.management.domain.event.ConferencePublished;
-import com.microsoft.conference.management.domain.event.ConferenceUnpublished;
-import com.microsoft.conference.management.domain.event.ConferenceUpdated;
-import com.microsoft.conference.management.domain.event.SeatTypeAdded;
-import com.microsoft.conference.management.domain.event.SeatTypeQuantityChanged;
-import com.microsoft.conference.management.domain.event.SeatTypeRemoved;
-import com.microsoft.conference.management.domain.event.SeatTypeUpdated;
-import com.microsoft.conference.management.domain.event.SeatsReservationCancelled;
-import com.microsoft.conference.management.domain.event.SeatsReservationCommitted;
-import com.microsoft.conference.management.domain.event.SeatsReserved;
+import com.microsoft.conference.management.domain.event.*;
 import com.microsoft.conference.management.domain.model.ConferenceInfo;
 import com.microsoft.conference.management.domain.model.ReservationItem;
 import com.microsoft.conference.management.domain.model.SeatAvailableQuantity;
@@ -74,28 +64,28 @@ public class ConferenceViewModelGenerator {
     }
 
     @Subscribe
-    public void handleAsync(ConferenceUpdated evnt) {
+    public CompletableFuture<Void> handleAsync(ConferenceUpdated evnt) {
         ConferenceDO conferenceDO = DTOExtensions.INSTANCE.toDO(evnt, evnt.getInfo());
         conferenceDO.setIsPublished((byte) 0);
         LambdaUpdateWrapper<ConferenceDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(ConferenceDO::getVersion, evnt.getVersion() - 1);
         updateWrapper.eq(ConferenceDO::getConferenceId, evnt.getAggregateRootId());
-        CompletableFuture.runAsync(() -> conferenceMapper.update(conferenceDO, updateWrapper));
+        return CompletableFuture.runAsync(() -> conferenceMapper.update(conferenceDO, updateWrapper));
     }
 
     @Subscribe
-    public void handleAsync(ConferencePublished evnt) {
+    public CompletableFuture<Void> handleAsync(ConferencePublished evnt) {
         ConferenceDO conferenceDO = new ConferenceDO();
         conferenceDO.setIsPublished((byte) 1);
         conferenceDO.setConferenceId(evnt.getAggregateRootId());
         LambdaUpdateWrapper<ConferenceDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(ConferenceDO::getVersion, evnt.getVersion() - 1);
         updateWrapper.eq(ConferenceDO::getConferenceId, evnt.getAggregateRootId());
-        CompletableFuture.runAsync(() -> conferenceMapper.update(conferenceDO, updateWrapper));
+        return CompletableFuture.runAsync(() -> conferenceMapper.update(conferenceDO, updateWrapper));
     }
 
     @Subscribe
-    public void handleAsync(ConferenceUnpublished evnt) {
+    public CompletableFuture<Void> handleAsync(ConferenceUnpublished evnt) {
         ConferenceDO conferenceDO = new ConferenceDO();
         conferenceDO.setIsPublished((byte) 0);
         conferenceDO.setVersion(evnt.getVersion());
@@ -104,7 +94,7 @@ public class ConferenceViewModelGenerator {
         LambdaUpdateWrapper<ConferenceDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(ConferenceDO::getVersion, evnt.getVersion() - 1);
         updateWrapper.eq(ConferenceDO::getConferenceId, evnt.getAggregateRootId());
-        CompletableFuture.runAsync(() -> conferenceMapper.update(conferenceDO, updateWrapper));
+        return CompletableFuture.runAsync(() -> conferenceMapper.update(conferenceDO, updateWrapper));
     }
 
     @Subscribe

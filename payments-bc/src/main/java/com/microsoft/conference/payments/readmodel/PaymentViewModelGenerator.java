@@ -12,15 +12,16 @@ import com.microsoft.conference.payments.domain.model.PaymentItem;
 import com.microsoft.conference.payments.domain.model.PaymentState;
 import org.enodeframework.annotation.Event;
 import org.enodeframework.annotation.Subscribe;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.Resource;
 
 @Event
 public class PaymentViewModelGenerator {
 
-    @Autowired
+    @Resource
     private PaymentMapper paymentMapper;
 
-    @Autowired
+    @Resource
     private PaymentItemMapper paymentItemMapper;
 
     @Subscribe
