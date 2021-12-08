@@ -1,8 +1,8 @@
 package com.microsoft.conference.common.registration.commands.seatassignment;
 
-import org.enodeframework.commanding.Command;
+import org.enodeframework.commanding.AbstractCommandMessage;
 
-public class CreateSeatAssignments extends Command<String> {
+public class CreateSeatAssignments extends AbstractCommandMessage<String> {
     public CreateSeatAssignments() {
     }
 

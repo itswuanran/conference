@@ -2,11 +2,11 @@ package com.microsoft.conference.management.domain.event;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.enodeframework.eventing.DomainEvent;
+import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 @Getter
 @Setter
-public class SeatTypeQuantityChanged extends DomainEvent<String> {
+public class SeatTypeQuantityChanged extends AbstractDomainEventMessage<String> {
     private String seatTypeId;
     private int quantity;
     private int availableQuantity;

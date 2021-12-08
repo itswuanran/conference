@@ -5,7 +5,7 @@ import com.microsoft.conference.management.domain.model.*;
 import com.microsoft.conference.management.domain.service.RegisterConferenceSlugService;
 import org.enodeframework.annotation.Command;
 import org.enodeframework.annotation.Subscribe;
-import org.enodeframework.commanding.ICommandContext;
+import org.enodeframework.commanding.CommandContext;
 
 import javax.annotation.Resource;
 import java.util.concurrent.CompletableFuture;
@@ -19,11 +19,11 @@ public class ConferenceCommandHandler {
     private RegisterConferenceSlugService registerConferenceSlugService;
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(ICommandContext context, CreateConference command) {
+    public CompletableFuture<Boolean> handleAsync(CommandContext context, CreateConference command) {
         return execInternal(context, command);
     }
 
-    private CompletableFuture<Boolean> execInternal(ICommandContext context, CreateConference command) {
+    private CompletableFuture<Boolean> execInternal(CommandContext context, CreateConference command) {
         Conference conference = new Conference(command.getAggregateRootId(), new ConferenceInfo(
                 command.getAccessCode(),
                 new ConferenceOwner(command.getOwnerName(), command.getOwnerEmail()),
@@ -40,7 +40,7 @@ public class ConferenceCommandHandler {
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ICommandContext context, UpdateConference command) {
+    public CompletableFuture<Void> handleAsync(CommandContext context, UpdateConference command) {
         return conferenceHandler(context, command.getAggregateRootId(), conference -> {
             conference.update(new ConferenceEditableInfo(
                     command.name,
@@ -54,21 +54,21 @@ public class ConferenceCommandHandler {
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ICommandContext context, PublishConference command) {
+    public CompletableFuture<Void> handleAsync(CommandContext context, PublishConference command) {
         return conferenceHandler(context, command.getAggregateRootId(), conference -> {
             conference.publish();
         });
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ICommandContext context, UnpublishConference command) {
+    public CompletableFuture<Void> handleAsync(CommandContext context, UnpublishConference command) {
         return conferenceHandler(context, command.getAggregateRootId(), conference -> {
             conference.unpublish();
         });
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ICommandContext context, AddSeatType command) {
+    public CompletableFuture<Void> handleAsync(CommandContext context, AddSeatType command) {
         return conferenceHandler(context, command.getAggregateRootId(), conference -> {
             conference.addSeat(new SeatTypeInfo(
                     command.name,
@@ -78,14 +78,14 @@ public class ConferenceCommandHandler {
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ICommandContext context, RemoveSeatType command) {
+    public CompletableFuture<Void> handleAsync(CommandContext context, RemoveSeatType command) {
         return conferenceHandler(context, command.getAggregateRootId(), conference -> {
             conference.removeSeat(command.getSeatTypeId());
         });
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ICommandContext context, UpdateSeatType command) {
+    public CompletableFuture<Void> handleAsync(CommandContext context, UpdateSeatType command) {
         return conferenceHandler(context, command.getAggregateRootId(), conference -> {
             conference.updateSeat(
                     command.seatTypeId,
@@ -95,14 +95,14 @@ public class ConferenceCommandHandler {
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ICommandContext context, MakeSeatReservation command) {
+    public CompletableFuture<Void> handleAsync(CommandContext context, MakeSeatReservation command) {
         return conferenceHandler(context, command.getAggregateRootId(), conference -> {
             conference.makeReservation(command.reservationId, command.seats.stream().map(x -> new ReservationItem(x.seatType, x.quantity)).collect(Collectors.toList()));
         });
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ICommandContext context, CommitSeatReservation command) {
+    public CompletableFuture<Void> handleAsync(CommandContext context, CommitSeatReservation command) {
         return conferenceHandler(context, command.getAggregateRootId(), conference -> {
             conference.commitReservation(command.reservationId);
         });
@@ -110,13 +110,13 @@ public class ConferenceCommandHandler {
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ICommandContext context, CancelSeatReservation command) {
+    public CompletableFuture<Void> handleAsync(CommandContext context, CancelSeatReservation command) {
         return conferenceHandler(context, command.getAggregateRootId(), conference -> {
             conference.cancelReservation(command.reservationId);
         });
     }
 
-    private CompletableFuture<Void> conferenceHandler(ICommandContext context, String id, Consumer<Conference> consumer) {
+    private CompletableFuture<Void> conferenceHandler(CommandContext context, String id, Consumer<Conference> consumer) {
         return context.getAsync(id, Conference.class).thenAccept(x -> {
             consumer.accept(x);
         }).exceptionally(throwable -> {

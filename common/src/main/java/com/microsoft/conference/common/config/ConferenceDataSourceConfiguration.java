@@ -18,7 +18,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import javax.sql.DataSource;
 
 @MapperScan(basePackages = {"com.microsoft.conference"},
-    sqlSessionFactoryRef = "conferenceSqlSessionFactory"
+        sqlSessionFactoryRef = "conferenceSqlSessionFactory"
 )
 public class ConferenceDataSourceConfiguration {
 
@@ -66,8 +66,8 @@ public class ConferenceDataSourceConfiguration {
 
     @Bean(name = "conferenceSqlSessionFactory")
     public SqlSessionFactory conferenceSqlSessionFactory(
-        @Qualifier("conferenceSqlDataSource") DataSource conferenceSqlDataSource,
-        MybatisPlusInterceptor plusInterceptor) throws Exception {
+            @Qualifier("conferenceSqlDataSource") DataSource conferenceSqlDataSource,
+            MybatisPlusInterceptor plusInterceptor) throws Exception {
         MybatisSqlSessionFactoryBean sqlSessionFactoryBean = new MybatisSqlSessionFactoryBean();
         GlobalConfig globalConfig = new GlobalConfig();
         GlobalConfig.DbConfig dbConfig = new GlobalConfig.DbConfig();
@@ -82,7 +82,7 @@ public class ConferenceDataSourceConfiguration {
 
     @Bean(name = "conferenceSqlTransactionManager")
     public DataSourceTransactionManager conferenceSqlTransactionManager(
-        @Qualifier("conferenceSqlDataSource") DataSource conferenceSqlDataSource) {
+            @Qualifier("conferenceSqlDataSource") DataSource conferenceSqlDataSource) {
         return new DataSourceTransactionManager(conferenceSqlDataSource);
     }
 }

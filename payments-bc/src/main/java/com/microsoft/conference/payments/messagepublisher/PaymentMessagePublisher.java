@@ -6,8 +6,8 @@ import com.microsoft.conference.payments.domain.event.PaymentCompleted;
 import com.microsoft.conference.payments.domain.event.PaymentRejected;
 import org.enodeframework.annotation.Event;
 import org.enodeframework.annotation.Subscribe;
-import org.enodeframework.messaging.IApplicationMessage;
-import org.enodeframework.messaging.IMessagePublisher;
+import org.enodeframework.messaging.ApplicationMessage;
+import org.enodeframework.messaging.MessagePublisher;
 
 import javax.annotation.Resource;
 import java.util.concurrent.CompletableFuture;
@@ -16,9 +16,9 @@ import java.util.concurrent.CompletableFuture;
 public class PaymentMessagePublisher {
 
     @Resource
-    private final IMessagePublisher<IApplicationMessage> messagePublisher;
+    private final MessagePublisher<ApplicationMessage> messagePublisher;
 
-    public PaymentMessagePublisher(IMessagePublisher<IApplicationMessage> messagePublisher) {
+    public PaymentMessagePublisher(MessagePublisher<ApplicationMessage> messagePublisher) {
         this.messagePublisher = messagePublisher;
     }
 

@@ -1,11 +1,11 @@
 package com.microsoft.conference.common.management.commands;
 
-import org.enodeframework.commanding.Command;
+import org.enodeframework.commanding.AbstractCommandMessage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MakeSeatReservation extends Command<String> {
+public class MakeSeatReservation extends AbstractCommandMessage<String> {
     public String reservationId;
     public List<SeatReservationItemInfo> seats;
 

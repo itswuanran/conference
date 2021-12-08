@@ -3,13 +3,13 @@ package com.microsoft.conference.management.domain.event;
 import com.microsoft.conference.management.domain.model.SeatAvailableQuantity;
 import lombok.Getter;
 import lombok.Setter;
-import org.enodeframework.eventing.DomainEvent;
+import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 import java.util.List;
 
 @Getter
 @Setter
-public class SeatsReservationCancelled extends DomainEvent<String> {
+public class SeatsReservationCancelled extends AbstractDomainEventMessage<String> {
     private String reservationId;
     private List<SeatAvailableQuantity> seatAvailableQuantities;
 

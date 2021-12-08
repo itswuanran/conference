@@ -8,11 +8,7 @@ import com.microsoft.conference.common.mapper.ConferenceMapper;
 import com.microsoft.conference.common.mapper.SeatTypeMapper;
 import com.microsoft.conference.registration.readmodel.ConferenceConvert;
 import com.microsoft.conference.registration.readmodel.OrderConvert;
-import com.microsoft.conference.registration.readmodel.service.ConferenceAlias;
-import com.microsoft.conference.registration.readmodel.service.ConferenceDetails;
-import com.microsoft.conference.registration.readmodel.service.ConferenceQueryService;
-import com.microsoft.conference.registration.readmodel.service.SeatTypeName;
-import com.microsoft.conference.registration.readmodel.service.SeatTypeVO;
+import com.microsoft.conference.registration.readmodel.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

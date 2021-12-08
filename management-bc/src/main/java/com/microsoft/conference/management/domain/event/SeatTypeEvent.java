@@ -3,11 +3,11 @@ package com.microsoft.conference.management.domain.event;
 import com.microsoft.conference.management.domain.model.SeatTypeInfo;
 import lombok.Getter;
 import lombok.Setter;
-import org.enodeframework.eventing.DomainEvent;
+import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 @Getter
 @Setter
-public abstract class SeatTypeEvent extends DomainEvent<String> {
+public abstract class SeatTypeEvent extends AbstractDomainEventMessage<String> {
     private String seatTypeId;
     private SeatTypeInfo seatTypeInfo;
 

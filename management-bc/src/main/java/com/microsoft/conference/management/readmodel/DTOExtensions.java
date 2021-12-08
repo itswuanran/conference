@@ -1,10 +1,6 @@
 package com.microsoft.conference.management.readmodel;
 
-import com.microsoft.conference.common.dataobject.ConferenceDO;
-import com.microsoft.conference.common.dataobject.ConferenceSlugIndexDO;
-import com.microsoft.conference.common.dataobject.OrderDO;
-import com.microsoft.conference.common.dataobject.OrderSeatAssignmentDO;
-import com.microsoft.conference.common.dataobject.SeatTypeDO;
+import com.microsoft.conference.common.dataobject.*;
 import com.microsoft.conference.common.management.commands.AddSeatType;
 import com.microsoft.conference.common.management.commands.CreateConference;
 import com.microsoft.conference.common.management.commands.UpdateConference;

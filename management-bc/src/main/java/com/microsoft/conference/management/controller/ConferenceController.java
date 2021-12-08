@@ -2,13 +2,7 @@ package com.microsoft.conference.management.controller;
 
 import com.microsoft.conference.common.ActionResult;
 import com.microsoft.conference.common.ErrCode;
-import com.microsoft.conference.common.management.commands.AddSeatType;
-import com.microsoft.conference.common.management.commands.CreateConference;
-import com.microsoft.conference.common.management.commands.PublishConference;
-import com.microsoft.conference.common.management.commands.RemoveSeatType;
-import com.microsoft.conference.common.management.commands.UnpublishConference;
-import com.microsoft.conference.common.management.commands.UpdateConference;
-import com.microsoft.conference.common.management.commands.UpdateSeatType;
+import com.microsoft.conference.common.management.commands.*;
 import com.microsoft.conference.management.domain.model.SeatType;
 import com.microsoft.conference.management.readmodel.ConferenceQueryService;
 import com.microsoft.conference.management.readmodel.ConferenceVO;
@@ -18,21 +12,9 @@ import com.microsoft.conference.management.request.ConferenceInfo;
 import com.microsoft.conference.management.request.EditableConferenceInfo;
 import com.microsoft.conference.management.request.LocateConference;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.enodeframework.commanding.CommandResult;
-import org.enodeframework.commanding.CommandReturnType;
-import org.enodeframework.commanding.CommandStatus;
-import org.enodeframework.commanding.ICommand;
-import org.enodeframework.commanding.ICommandService;
+import org.enodeframework.commanding.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -45,7 +27,7 @@ import static org.enodeframework.common.io.Task.await;
 public class ConferenceController {
 
     @Autowired
-    private ICommandService commandService;
+    private CommandBus commandService;
 
     @Autowired
     private ConferenceQueryService conferenceQueryService;
@@ -151,7 +133,7 @@ public class ConferenceController {
         return CommandStatus.Success.equals(result.getStatus());
     }
 
-    private CompletableFuture<CommandResult> executeCommandAsync(ICommand command) {
+    private CompletableFuture<CommandResult> executeCommandAsync(CommandMessage command) {
         return commandService.executeAsync(command, CommandReturnType.CommandExecuted);
     }
 

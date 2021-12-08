@@ -9,8 +9,8 @@ import com.microsoft.conference.common.registration.commands.seatassignment.Unas
 import com.microsoft.conference.registration.readmodel.service.OrderQueryService;
 import com.microsoft.conference.registration.readmodel.service.OrderSeatAssignmentVO;
 import com.microsoft.conference.registration.readmodel.service.OrderVO;
-import org.enodeframework.commanding.ICommand;
-import org.enodeframework.commanding.ICommandService;
+import org.enodeframework.commanding.CommandBus;
+import org.enodeframework.commanding.CommandMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class OrderController {
 
     @Autowired
-    private ICommandService commandService;
+    private CommandBus commandService;
 
     @Autowired
     private OrderQueryService orderQueryService;
@@ -57,13 +57,13 @@ public class OrderController {
             return ActionResult.error(ErrCode.SYSTEM_ERROR, "" + viewModel.getOrderId());
         }
         String assignmentsId = seatAssignments.get(0).getAssignmentsId();
-        List<ICommand> unassignedCommands = seatAssignments.stream().filter(x -> Strings.isNullOrEmpty(x.getAttendeeEmail()))
+        List<CommandMessage> unassignedCommands = seatAssignments.stream().filter(x -> Strings.isNullOrEmpty(x.getAttendeeEmail()))
                 .map(y -> {
                     UnassignSeat unassignSeat = new UnassignSeat(assignmentsId);
                     unassignSeat.setPosition(y.getPosition());
-                    return (ICommand) unassignSeat;
+                    return (CommandMessage) unassignSeat;
                 }).collect(Collectors.toList());
-        List<ICommand> assignedCommands = seatAssignments.stream().filter(x -> !Strings.isNullOrEmpty(x.getAttendeeEmail()))
+        List<CommandMessage> assignedCommands = seatAssignments.stream().filter(x -> !Strings.isNullOrEmpty(x.getAttendeeEmail()))
                 .map(y -> {
                     AssignSeat unassignSeat = new AssignSeat(assignmentsId);
                     unassignSeat.setPosition(y.getPosition());
@@ -72,10 +72,10 @@ public class OrderController {
                     personalInfo.setFirstName(y.getAttendeeFirstName());
                     personalInfo.setLastName(y.getAttendeeLastName());
                     unassignSeat.setPersonalInfo(personalInfo);
-                    return (ICommand) unassignSeat;
+                    return (CommandMessage) unassignSeat;
                 }).collect(Collectors.toList());
         assignedCommands.addAll(unassignedCommands);
-        for (ICommand command : assignedCommands) {
+        for (CommandMessage command : assignedCommands) {
             sendCommandAsync(command);
         }
         return ActionResult.empty();
@@ -86,7 +86,7 @@ public class OrderController {
         return new ActionResult<>(objects);
     }
 
-    private void sendCommandAsync(ICommand command) {
+    private void sendCommandAsync(CommandMessage command) {
         commandService.sendAsync(command);
     }
 }

@@ -3,22 +3,16 @@ package com.microsoft.conference.registration.domain.order.model;
 import com.microsoft.conference.common.exception.InvalidOperationException;
 import com.microsoft.conference.registration.domain.SeatQuantity;
 import com.microsoft.conference.registration.domain.order.PricingService;
-import com.microsoft.conference.registration.domain.order.event.OrderClosed;
-import com.microsoft.conference.registration.domain.order.event.OrderExpired;
-import com.microsoft.conference.registration.domain.order.event.OrderPaymentConfirmed;
-import com.microsoft.conference.registration.domain.order.event.OrderPlaced;
-import com.microsoft.conference.registration.domain.order.event.OrderRegistrantAssigned;
-import com.microsoft.conference.registration.domain.order.event.OrderReservationConfirmed;
-import com.microsoft.conference.registration.domain.order.event.OrderSuccessed;
+import com.microsoft.conference.registration.domain.order.event.*;
 import com.microsoft.conference.registration.domain.seatassigning.model.OrderSeatAssignments;
 import org.enodeframework.common.utils.Assert;
 import org.enodeframework.common.utils.IdGenerator;
-import org.enodeframework.domain.AggregateRoot;
+import org.enodeframework.domain.AbstractAggregateRoot;
 
 import java.util.Date;
 import java.util.List;
 
-public class Order extends AggregateRoot<String> {
+public class Order extends AbstractAggregateRoot<String> {
     private OrderTotal total;
     private String conferenceId;
     private OrderStatus status;
@@ -39,7 +33,7 @@ public class Order extends AggregateRoot<String> {
             throw new IllegalArgumentException("The seats of order cannot be empty.");
         }
         OrderTotal orderTotal = pricingService.calculateTotal(conferenceId, seats);
-        applyEvent(new OrderPlaced(conferenceId, orderTotal, new Date(), IdGenerator.nextId()));
+        applyEvent(new OrderPlaced(conferenceId, orderTotal, new Date(), IdGenerator.id()));
     }
 
     public void assignRegistrant(String firstName, String lastName, String email) {

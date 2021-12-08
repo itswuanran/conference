@@ -1,27 +1,14 @@
 package com.microsoft.conference.management.domain.model;
 
-import com.microsoft.conference.common.Linq;
+import com.microsoft.conference.common.ListUtils;
 import com.microsoft.conference.common.exception.SeatTypeException;
-import com.microsoft.conference.management.domain.event.ConferenceCreated;
-import com.microsoft.conference.management.domain.event.ConferencePublished;
-import com.microsoft.conference.management.domain.event.ConferenceUnpublished;
-import com.microsoft.conference.management.domain.event.ConferenceUpdated;
-import com.microsoft.conference.management.domain.event.SeatTypeAdded;
-import com.microsoft.conference.management.domain.event.SeatTypeQuantityChanged;
-import com.microsoft.conference.management.domain.event.SeatTypeRemoved;
-import com.microsoft.conference.management.domain.event.SeatTypeUpdated;
-import com.microsoft.conference.management.domain.event.SeatsReservationCancelled;
-import com.microsoft.conference.management.domain.event.SeatsReservationCommitted;
-import com.microsoft.conference.management.domain.event.SeatsReserved;
+import com.microsoft.conference.management.domain.event.*;
 import com.microsoft.conference.management.domain.publishableexception.SeatInsufficientException;
-import org.enodeframework.domain.AggregateRoot;
+import org.enodeframework.domain.AbstractAggregateRoot;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class Conference extends AggregateRoot<String> {
+public class Conference extends AbstractAggregateRoot<String> {
     private ConferenceInfo conferenceInfo;
     private List<SeatType> seatTypes;
     private Map<String, List<ReservationItem>> reservationsMap;
@@ -55,7 +42,7 @@ public class Conference extends AggregateRoot<String> {
     }
 
     public void updateSeat(String seatTypeId, SeatTypeInfo seatTypeInfo, int quantity) {
-        SeatType seatType = Linq.single(seatTypes, x -> x.getId().equals(seatTypeId));
+        SeatType seatType = ListUtils.single(seatTypes, x -> x.getId().equals(seatTypeId));
         if (seatType == null) {
             throw new SeatTypeException("Seat type not exist.");
         }
@@ -112,7 +99,7 @@ public class Conference extends AggregateRoot<String> {
             List<ReservationItem> reservationItems = reservationsMap.get(reservationId);
             List<SeatQuantity> seatQuantities = new ArrayList<>();
             for (ReservationItem reservationItem : reservationItems) {
-                SeatType seatType = Linq.single(seatTypes, (x -> x.getId() == reservationItem.getSeatTypeId()));
+                SeatType seatType = ListUtils.single(seatTypes, (x -> x.getId() == reservationItem.getSeatTypeId()));
                 seatQuantities.add(new SeatQuantity(seatType.getId(), seatType.getQuantity() - reservationItem.getQuantity()));
             }
             applyEvent(new SeatsReservationCommitted(reservationId, seatQuantities));
@@ -124,7 +111,7 @@ public class Conference extends AggregateRoot<String> {
             List<ReservationItem> reservationItems = reservationsMap.get(reservationId);
             List<SeatAvailableQuantity> seatAvailableQuantities = new ArrayList<>();
             for (ReservationItem reservationItem : reservationItems) {
-                SeatType seatType = Linq.single(seatTypes, (x -> x.getId() == reservationItem.getSeatTypeId()));
+                SeatType seatType = ListUtils.single(seatTypes, (x -> Objects.equals(x.getId(), reservationItem.getSeatTypeId())));
                 int availableQuantity = seatType.getQuantity() - getTotalReservationQuantity(seatType.getId());
                 seatAvailableQuantities.add(new SeatAvailableQuantity(seatType.getId(), availableQuantity + reservationItem.getQuantity()));
             }
@@ -133,13 +120,13 @@ public class Conference extends AggregateRoot<String> {
     }
 
     private boolean hasReservation(String seatTypeId) {
-        return reservationsMap.values().stream().anyMatch(x -> x.stream().anyMatch(y -> y.getSeatTypeId() == seatTypeId));
+        return reservationsMap.values().stream().anyMatch(x -> x.stream().anyMatch(y -> Objects.equals(y.getSeatTypeId(), seatTypeId)));
     }
 
     private int getTotalReservationQuantity(String seatTypeId) {
         int totalReservationQuantity = 0;
         for (List<ReservationItem> reservation : reservationsMap.values()) {
-            ReservationItem reservationItem = Linq.singleOrDefault(reservation, x -> x.getSeatTypeId() == seatTypeId);
+            ReservationItem reservationItem = ListUtils.singleOrDefault(reservation, x -> Objects.equals(x.getSeatTypeId(), seatTypeId));
             if (reservationItem != null) {
                 totalReservationQuantity += reservationItem.getQuantity();
             }
@@ -185,16 +172,16 @@ public class Conference extends AggregateRoot<String> {
     }
 
     private void handle(SeatTypeUpdated evnt) {
-        Linq.single(seatTypes, x -> x.getId() == evnt.getSeatTypeId()).setSeatTypeInfo(evnt.getSeatTypeInfo());
+        ListUtils.single(seatTypes, x -> Objects.equals(x.getId(), evnt.getSeatTypeId())).setSeatTypeInfo(evnt.getSeatTypeInfo());
     }
 
     private void handle(SeatTypeQuantityChanged evnt) {
-        Linq.single(seatTypes, x -> x.getId() == evnt.getSeatTypeId()).setQuantity(evnt.getQuantity());
+        ListUtils.single(seatTypes, x -> Objects.equals(x.getId(), evnt.getSeatTypeId())).setQuantity(evnt.getQuantity());
     }
 
     private void handle(SeatTypeRemoved evnt) {
         // remove 指定的seatTypeId
-        seatTypes.remove(Linq.single(seatTypes, x -> x.getId().equals(evnt.getSeatTypeId())));
+        seatTypes.remove(ListUtils.single(seatTypes, x -> x.getId().equals(evnt.getSeatTypeId())));
     }
 
     private void handle(SeatsReserved evnt) {
@@ -204,7 +191,7 @@ public class Conference extends AggregateRoot<String> {
     private void handle(SeatsReservationCommitted evnt) {
         reservationsMap.remove(evnt.getReservationId());
         for (SeatQuantity seatQuantity : evnt.getSeatQuantities()) {
-            Linq.single(seatTypes, (x -> x.getId() == seatQuantity.getSeatTypeId())).setQuantity(seatQuantity.getQuantity());
+            ListUtils.single(seatTypes, (x -> Objects.equals(x.getId(), seatQuantity.getSeatTypeId()))).setQuantity(seatQuantity.getQuantity());
         }
     }
 

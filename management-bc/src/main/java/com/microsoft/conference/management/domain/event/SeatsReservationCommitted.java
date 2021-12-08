@@ -1,11 +1,11 @@
 package com.microsoft.conference.management.domain.event;
 
 import com.microsoft.conference.management.domain.model.SeatQuantity;
-import org.enodeframework.eventing.DomainEvent;
+import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 import java.util.List;
 
-public class SeatsReservationCommitted extends DomainEvent<String> {
+public class SeatsReservationCommitted extends AbstractDomainEventMessage<String> {
     private String reservationId;
     private List<SeatQuantity> seatQuantities;
 

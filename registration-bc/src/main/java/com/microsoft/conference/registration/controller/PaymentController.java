@@ -7,7 +7,7 @@ import com.microsoft.conference.common.payment.commands.CompletePayment;
 import com.microsoft.conference.registration.readmodel.service.PaymentQueryService;
 import com.microsoft.conference.registration.readmodel.service.PaymentVO;
 import lombok.var;
-import org.enodeframework.commanding.ICommandService;
+import org.enodeframework.commanding.CommandBus;
 import org.enodeframework.common.io.Task;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class PaymentController {
     private final int waitTimeoutInSeconds = 5;
 
     @Autowired
-    private ICommandService commandService;
+    private CommandBus commandService;
 
     @Autowired
     private PaymentQueryService paymentQueryService;

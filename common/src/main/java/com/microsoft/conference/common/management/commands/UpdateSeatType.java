@@ -1,10 +1,10 @@
 package com.microsoft.conference.common.management.commands;
 
-import org.enodeframework.commanding.Command;
+import org.enodeframework.commanding.AbstractCommandMessage;
 
 import java.math.BigDecimal;
 
-public class UpdateSeatType extends Command<String> {
+public class UpdateSeatType extends AbstractCommandMessage<String> {
     public String seatTypeId;
     public String name;
     public String description;

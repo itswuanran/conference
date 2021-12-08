@@ -7,22 +7,22 @@ import com.microsoft.conference.payments.domain.model.Payment;
 import com.microsoft.conference.payments.domain.model.PaymentItem;
 import org.enodeframework.annotation.Command;
 import org.enodeframework.annotation.Subscribe;
-import org.enodeframework.commanding.ICommandContext;
+import org.enodeframework.commanding.CommandContext;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
- * ICommandHandler<CreatePayment>,
- * ICommandHandler<CompletePayment>,
- * ICommandHandler<CancelPayment>
+ * CommandMessageHandler<CreatePayment>,
+ * CommandMessageHandler<CompletePayment>,
+ * CommandMessageHandler<CancelPayment>
  */
 @Command
 public class PaymentCommandHandler {
 
     @Subscribe
-    public void handleAsync(ICommandContext context, CreatePayment command) {
+    public void handleAsync(CommandContext context, CreatePayment command) {
         List<PaymentItem> paymentItemList = command.getLines().stream().map(x -> new PaymentItem(x.description, x.amount)).collect(Collectors.toList());
         context.addAsync(new Payment(
                 command.getAggregateRootId(),
@@ -34,13 +34,13 @@ public class PaymentCommandHandler {
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ICommandContext context, CompletePayment command) {
+    public CompletableFuture<Void> handleAsync(CommandContext context, CompletePayment command) {
         return context.getAsync(command.getAggregateRootId(), Payment.class)
                 .thenAccept(payment -> payment.complete());
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ICommandContext context, CancelPayment command) {
+    public CompletableFuture<Void> handleAsync(CommandContext context, CancelPayment command) {
         return context.getAsync(command.getAggregateRootId(), Payment.class)
                 .thenAccept(payment -> payment.cancel());
     }

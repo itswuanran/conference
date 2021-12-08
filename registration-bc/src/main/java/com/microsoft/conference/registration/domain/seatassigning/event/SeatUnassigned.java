@@ -2,11 +2,11 @@ package com.microsoft.conference.registration.domain.seatassigning.event;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.enodeframework.eventing.DomainEvent;
+import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 @Getter
 @Setter
-public class SeatUnassigned extends DomainEvent<String> {
+public class SeatUnassigned extends AbstractDomainEventMessage<String> {
     private int position;
 
     public SeatUnassigned() {

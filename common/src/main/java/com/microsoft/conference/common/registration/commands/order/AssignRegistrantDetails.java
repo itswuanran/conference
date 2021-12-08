@@ -1,10 +1,10 @@
 package com.microsoft.conference.common.registration.commands.order;
 
 import lombok.Data;
-import org.enodeframework.commanding.Command;
+import org.enodeframework.commanding.AbstractCommandMessage;
 
 @Data
-public class AssignRegistrantDetails extends Command<String> {
+public class AssignRegistrantDetails extends AbstractCommandMessage<String> {
     private String firstName;
     private String lastName;
     private String email;

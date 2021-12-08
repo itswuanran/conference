@@ -7,8 +7,8 @@ import com.microsoft.conference.management.domain.event.SeatsReserved;
 import com.microsoft.conference.management.domain.publishableexception.SeatInsufficientException;
 import org.enodeframework.annotation.Event;
 import org.enodeframework.annotation.Subscribe;
-import org.enodeframework.messaging.IApplicationMessage;
-import org.enodeframework.messaging.IMessagePublisher;
+import org.enodeframework.messaging.ApplicationMessage;
+import org.enodeframework.messaging.MessagePublisher;
 
 import javax.annotation.Resource;
 import java.util.concurrent.CompletableFuture;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class ConferenceMessagePublisher {
 
     @Resource
-    private IMessagePublisher<IApplicationMessage> messagePublisher;
+    private MessagePublisher<ApplicationMessage> messagePublisher;
 
     @Subscribe
     public CompletableFuture<Boolean> handleAsync(SeatsReserved evnt) {

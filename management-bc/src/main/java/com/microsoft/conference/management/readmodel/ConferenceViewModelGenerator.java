@@ -7,6 +7,7 @@ import com.microsoft.conference.common.dataobject.SeatTypeDO;
 import com.microsoft.conference.common.mapper.ConferenceMapper;
 import com.microsoft.conference.common.mapper.ReservationItemMapper;
 import com.microsoft.conference.common.mapper.SeatTypeMapper;
+import com.microsoft.conference.common.tunnel.ConferenceTunnel;
 import com.microsoft.conference.management.domain.event.*;
 import com.microsoft.conference.management.domain.model.ConferenceInfo;
 import com.microsoft.conference.management.domain.model.ReservationItem;
@@ -43,6 +44,9 @@ public class ConferenceViewModelGenerator {
     private ConferenceMapper conferenceMapper;
 
     @Autowired
+    private ConferenceTunnel conferenceTunnel;
+
+    @Autowired
     private SeatTypeMapper seatTypeMapper;
 
     @Autowired
@@ -64,28 +68,28 @@ public class ConferenceViewModelGenerator {
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ConferenceUpdated evnt) {
+    public CompletableFuture<Integer> handleAsync(ConferenceUpdated evnt) {
         ConferenceDO conferenceDO = DTOExtensions.INSTANCE.toDO(evnt, evnt.getInfo());
         conferenceDO.setIsPublished((byte) 0);
         LambdaUpdateWrapper<ConferenceDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(ConferenceDO::getVersion, evnt.getVersion() - 1);
         updateWrapper.eq(ConferenceDO::getConferenceId, evnt.getAggregateRootId());
-        return CompletableFuture.runAsync(() -> conferenceMapper.update(conferenceDO, updateWrapper));
+        return conferenceTunnel.updateAsync(conferenceDO, updateWrapper);
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ConferencePublished evnt) {
+    public CompletableFuture<Integer> handleAsync(ConferencePublished evnt) {
         ConferenceDO conferenceDO = new ConferenceDO();
         conferenceDO.setIsPublished((byte) 1);
         conferenceDO.setConferenceId(evnt.getAggregateRootId());
         LambdaUpdateWrapper<ConferenceDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(ConferenceDO::getVersion, evnt.getVersion() - 1);
         updateWrapper.eq(ConferenceDO::getConferenceId, evnt.getAggregateRootId());
-        return CompletableFuture.runAsync(() -> conferenceMapper.update(conferenceDO, updateWrapper));
+        return conferenceTunnel.updateAsync(conferenceDO, updateWrapper);
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ConferenceUnpublished evnt) {
+    public CompletableFuture<Integer> handleAsync(ConferenceUnpublished evnt) {
         ConferenceDO conferenceDO = new ConferenceDO();
         conferenceDO.setIsPublished((byte) 0);
         conferenceDO.setVersion(evnt.getVersion());
@@ -94,7 +98,7 @@ public class ConferenceViewModelGenerator {
         LambdaUpdateWrapper<ConferenceDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(ConferenceDO::getVersion, evnt.getVersion() - 1);
         updateWrapper.eq(ConferenceDO::getConferenceId, evnt.getAggregateRootId());
-        return CompletableFuture.runAsync(() -> conferenceMapper.update(conferenceDO, updateWrapper));
+        return conferenceTunnel.updateAsync(conferenceDO, updateWrapper);
     }
 
     @Subscribe
@@ -106,7 +110,7 @@ public class ConferenceViewModelGenerator {
         LambdaUpdateWrapper<ConferenceDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(ConferenceDO::getVersion, evnt.getVersion() - 1);
         updateWrapper.eq(ConferenceDO::getConferenceId, evnt.getAggregateRootId());
-        int effectedRows = conferenceMapper.update(conferenceDO, updateWrapper);
+        int effectedRows = conferenceTunnel.update(conferenceDO, updateWrapper);
         if (effectedRows == 1) {
             SeatTypeDO seatTypeDO = new SeatTypeDO();
             seatTypeDO.setConferenceId(evnt.getAggregateRootId());
@@ -127,8 +131,7 @@ public class ConferenceViewModelGenerator {
         LambdaUpdateWrapper<ConferenceDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(ConferenceDO::getVersion, evnt.getVersion() - 1);
         updateWrapper.eq(ConferenceDO::getConferenceId, evnt.getAggregateRootId());
-        int effectedRows = conferenceMapper.update(conferenceDO, updateWrapper);
-
+        int effectedRows = conferenceTunnel.update(conferenceDO, updateWrapper);
         if (effectedRows == 1) {
             SeatTypeDO seatTypeDO = new SeatTypeDO();
             seatTypeDO.setPrice(evnt.getSeatTypeInfo().getPrice());
@@ -150,7 +153,7 @@ public class ConferenceViewModelGenerator {
         updateWrapper.eq(ConferenceDO::getVersion, evnt.getVersion());
         updateWrapper.eq(ConferenceDO::getConferenceId, evnt.getAggregateRootId());
         updateWrapper.eq(ConferenceDO::getEventSequence, evnt.getSequence() - 1);
-        int effectedRows = conferenceMapper.update(conferenceDO, updateWrapper);
+        int effectedRows = conferenceTunnel.update(conferenceDO, updateWrapper);
         if (effectedRows == 1) {
             SeatTypeDO seatTypeDO = new SeatTypeDO();
             seatTypeDO.setQuantity(evnt.getQuantity());
@@ -170,7 +173,7 @@ public class ConferenceViewModelGenerator {
         LambdaUpdateWrapper<ConferenceDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(ConferenceDO::getVersion, evnt.getVersion());
         updateWrapper.eq(ConferenceDO::getConferenceId, evnt.getAggregateRootId());
-        int effectedRows = conferenceMapper.update(conferenceDO, updateWrapper);
+        int effectedRows = conferenceTunnel.update(conferenceDO, updateWrapper);
         if (effectedRows == 1) {
             LambdaUpdateWrapper<SeatTypeDO> wrapper = new LambdaUpdateWrapper<>();
             wrapper.eq(SeatTypeDO::getConferenceId, evnt.getAggregateRootId());
@@ -187,7 +190,7 @@ public class ConferenceViewModelGenerator {
         LambdaUpdateWrapper<ConferenceDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(ConferenceDO::getVersion, evnt.getVersion());
         updateWrapper.eq(ConferenceDO::getConferenceId, evnt.getAggregateRootId());
-        int effectedRows = conferenceMapper.update(conferenceDO, updateWrapper);
+        int effectedRows = conferenceTunnel.update(conferenceDO, updateWrapper);
         if (effectedRows == 1) {
             //插入预定记录
             for (ReservationItem reservationItem : evnt.getReservationItems()) {
@@ -218,7 +221,7 @@ public class ConferenceViewModelGenerator {
         LambdaUpdateWrapper<ConferenceDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(ConferenceDO::getVersion, evnt.getVersion());
         updateWrapper.eq(ConferenceDO::getConferenceId, evnt.getAggregateRootId());
-        int effectedRows = conferenceMapper.update(conferenceDO, updateWrapper);
+        int effectedRows = conferenceTunnel.update(conferenceDO, updateWrapper);
         if (effectedRows == 1) {
             LambdaUpdateWrapper<ReservationItemDO> wrapper = new LambdaUpdateWrapper<>();
             wrapper.eq(ReservationItemDO::getReservationId, evnt.getReservationId());
@@ -245,7 +248,7 @@ public class ConferenceViewModelGenerator {
         LambdaUpdateWrapper<ConferenceDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(ConferenceDO::getVersion, evnt.getVersion());
         updateWrapper.eq(ConferenceDO::getConferenceId, evnt.getAggregateRootId());
-        int effectedRows = conferenceMapper.update(conferenceDO, updateWrapper);
+        int effectedRows = conferenceTunnel.update(conferenceDO, updateWrapper);
         if (effectedRows == 1) {
             LambdaUpdateWrapper<ReservationItemDO> wrapper = new LambdaUpdateWrapper<>();
             wrapper.eq(ReservationItemDO::getReservationId, evnt.getReservationId());
