@@ -1,10 +1,6 @@
 package com.microsoft.conference.common;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -12,14 +8,34 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.*;
 
 /**
  * Collection utilities.
  */
 public class ListUtils {
+
+    public static <T> T single(Collection<T> value, Predicate<T> predicate) {
+        List<T> collect = value.stream().filter(predicate).collect(Collectors.toList());
+        if (collect.size() == 1) {
+            return collect.get(0);
+        }
+        if (collect.size() == 0) {
+            throw new IllegalArgumentException("not found");
+        }
+        throw new IllegalArgumentException("find more than one result");
+    }
+
+    public static <T> T singleOrDefault(Collection<T> value, Predicate<T> predicate) {
+        List<T> collect = value.stream().filter(predicate).collect(Collectors.toList());
+        if (collect.size() == 1) {
+            return collect.get(0);
+        }
+        if (collect.size() == 0) {
+            return null;
+        }
+        throw new IllegalArgumentException("find more than one result");
+    }
 
     /**
      * Make collection as stream.

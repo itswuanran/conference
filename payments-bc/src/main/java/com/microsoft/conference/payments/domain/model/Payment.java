@@ -4,12 +4,12 @@ import com.microsoft.conference.common.exception.InvalidOperationException;
 import com.microsoft.conference.payments.domain.event.PaymentCompleted;
 import com.microsoft.conference.payments.domain.event.PaymentInitiated;
 import com.microsoft.conference.payments.domain.event.PaymentRejected;
-import org.enodeframework.domain.AggregateRoot;
+import org.enodeframework.domain.AbstractAggregateRoot;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Payment extends AggregateRoot<String> {
+public class Payment extends AbstractAggregateRoot<String> {
     private String orderId;
     private String conferenceId;
     private int state;

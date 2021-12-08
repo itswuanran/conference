@@ -1,8 +1,8 @@
 package com.microsoft.conference.common.registration.commands.order;
 
-import org.enodeframework.commanding.Command;
+import org.enodeframework.commanding.AbstractCommandMessage;
 
-public class ConfirmReservation extends Command<String> {
+public class ConfirmReservation extends AbstractCommandMessage<String> {
     public boolean isReservationSuccess;
 
     public ConfirmReservation() {

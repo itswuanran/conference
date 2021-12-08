@@ -3,13 +3,13 @@ package com.microsoft.conference.registration.domain.seatassigning.event;
 import com.microsoft.conference.registration.domain.seatassigning.model.SeatAssignment;
 import lombok.Getter;
 import lombok.Setter;
-import org.enodeframework.eventing.DomainEvent;
+import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 import java.util.List;
 
 @Getter
 @Setter
-public class OrderSeatAssignmentsCreated extends DomainEvent<String> {
+public class OrderSeatAssignmentsCreated extends AbstractDomainEventMessage<String> {
     private String orderId;
 
     private List<SeatAssignment> seatAssignments;

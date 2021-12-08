@@ -2,11 +2,11 @@ package com.microsoft.conference.payments.domain.event;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.enodeframework.eventing.DomainEvent;
+import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 @Getter
 @Setter
-public class PaymentRejected extends DomainEvent<String> {
+public class PaymentRejected extends AbstractDomainEventMessage<String> {
     private String orderId;
     private String conferenceId;
 

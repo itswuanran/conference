@@ -49,8 +49,8 @@ public class ConferenceQueryService {
         queryWrapper.eq(SeatTypeDO::getConferenceId, conferenceId);
         List<SeatTypeDO> seatTypeDOS = seatTypeMapper.selectList(queryWrapper);
         return Optional.ofNullable(seatTypeDOS).orElse(new ArrayList<>())
-            .stream().map(DTOExtensions.INSTANCE::toVO)
-            .collect(Collectors.toList());
+                .stream().map(DTOExtensions.INSTANCE::toVO)
+                .collect(Collectors.toList());
     }
 
     public SeatTypeVO findSeatType(String seatTypeId) {
@@ -69,8 +69,8 @@ public class ConferenceQueryService {
             List<OrderSeatAssignmentDO> seatAssignmentDOS = orderSeatAssignmentMapper.selectList(wrapper);
             OrderVO orderVO = DTOExtensions.INSTANCE.toVO(orderDO);
             orderVO.setAttendees(Optional.ofNullable(seatAssignmentDOS).orElse(new ArrayList<>()).stream()
-                .map(DTOExtensions.INSTANCE::toVO)
-                .collect(Collectors.toList()));
+                    .map(DTOExtensions.INSTANCE::toVO)
+                    .collect(Collectors.toList()));
             return orderVO;
         }).collect(Collectors.toList());
     }

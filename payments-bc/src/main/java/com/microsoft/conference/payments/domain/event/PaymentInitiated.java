@@ -3,14 +3,14 @@ package com.microsoft.conference.payments.domain.event;
 import com.microsoft.conference.payments.domain.model.PaymentItem;
 import lombok.Getter;
 import lombok.Setter;
-import org.enodeframework.eventing.DomainEvent;
+import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
 @Setter
-public class PaymentInitiated extends DomainEvent<String> {
+public class PaymentInitiated extends AbstractDomainEventMessage<String> {
     private String orderId;
     private String conferenceId;
     private String description;

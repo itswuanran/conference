@@ -1,9 +1,9 @@
 package com.microsoft.conference.management.domain.event;
 
 import com.microsoft.conference.management.domain.model.ConferenceInfo;
-import org.enodeframework.eventing.DomainEvent;
+import org.enodeframework.eventing.AbstractDomainEventMessage;
 
-public abstract class ConferenceEvent extends DomainEvent<String> {
+public abstract class ConferenceEvent extends AbstractDomainEventMessage<String> {
     private ConferenceInfo info;
 
     public ConferenceEvent() {

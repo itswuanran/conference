@@ -1,8 +1,8 @@
 package com.microsoft.conference.management.domain.event;
 
-import org.enodeframework.eventing.DomainEvent;
+import org.enodeframework.eventing.AbstractDomainEventMessage;
 
-public class ConferenceUnpublished extends DomainEvent<String> {
+public class ConferenceUnpublished extends AbstractDomainEventMessage<String> {
     public ConferenceUnpublished() {
     }
 }

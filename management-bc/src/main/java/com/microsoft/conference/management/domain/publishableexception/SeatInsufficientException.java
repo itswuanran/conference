@@ -1,10 +1,10 @@
 package com.microsoft.conference.management.domain.publishableexception;
 
-import org.enodeframework.domain.DomainException;
+import org.enodeframework.domain.AbstractDomainExceptionMessage;
 
 import java.util.Map;
 
-public class SeatInsufficientException extends DomainException {
+public class SeatInsufficientException extends AbstractDomainExceptionMessage {
     public String conferenceId;
     public String reservationId;
 

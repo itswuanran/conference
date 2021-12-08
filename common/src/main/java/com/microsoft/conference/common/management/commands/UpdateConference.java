@@ -1,10 +1,10 @@
 package com.microsoft.conference.common.management.commands;
 
-import org.enodeframework.commanding.Command;
+import org.enodeframework.commanding.AbstractCommandMessage;
 
 import java.util.Date;
 
-public class UpdateConference extends Command<String> {
+public class UpdateConference extends AbstractCommandMessage<String> {
     public String name;
     public String description;
     public String location;

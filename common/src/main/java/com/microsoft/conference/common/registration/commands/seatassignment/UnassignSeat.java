@@ -1,10 +1,10 @@
 package com.microsoft.conference.common.registration.commands.seatassignment;
 
 import lombok.Data;
-import org.enodeframework.commanding.Command;
+import org.enodeframework.commanding.AbstractCommandMessage;
 
 @Data
-public class UnassignSeat extends Command<String> {
+public class UnassignSeat extends AbstractCommandMessage<String> {
     private int position;
 
     public UnassignSeat() {

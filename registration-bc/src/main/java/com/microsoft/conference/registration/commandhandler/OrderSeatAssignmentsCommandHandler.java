@@ -8,7 +8,7 @@ import com.microsoft.conference.registration.domain.seatassigning.model.Attendee
 import com.microsoft.conference.registration.domain.seatassigning.model.OrderSeatAssignments;
 import org.enodeframework.annotation.Command;
 import org.enodeframework.annotation.Subscribe;
-import org.enodeframework.commanding.ICommandContext;
+import org.enodeframework.commanding.CommandContext;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 public class OrderSeatAssignmentsCommandHandler {
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(ICommandContext context, CreateSeatAssignments command) {
+    public CompletableFuture<Boolean> handleAsync(CommandContext context, CreateSeatAssignments command) {
         return context.getAsync(command.aggregateRootId, Order.class).thenCompose(order -> {
             OrderSeatAssignments orderSeatAssignments = order.createSeatAssignments();
             return context.addAsync(orderSeatAssignments);
@@ -25,7 +25,7 @@ public class OrderSeatAssignmentsCommandHandler {
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ICommandContext context, AssignSeat command) {
+    public CompletableFuture<Void> handleAsync(CommandContext context, AssignSeat command) {
         return orderSeatHandler(context, command.aggregateRootId, orderSeatAssignments -> {
             orderSeatAssignments.assignSeat(command.getPosition(), new Attendee(
                     command.getPersonalInfo().getFirstName(),
@@ -35,13 +35,13 @@ public class OrderSeatAssignmentsCommandHandler {
     }
 
     @Subscribe
-    public CompletableFuture<Void> handleAsync(ICommandContext context, UnassignSeat command) {
+    public CompletableFuture<Void> handleAsync(CommandContext context, UnassignSeat command) {
         return orderSeatHandler(context, command.aggregateRootId, orderSeatAssignments -> {
             orderSeatAssignments.unAssignSeat(command.getPosition());
         });
     }
 
-    private CompletableFuture<Void> orderSeatHandler(ICommandContext context, String id, Consumer<OrderSeatAssignments> consumer) {
+    private CompletableFuture<Void> orderSeatHandler(CommandContext context, String id, Consumer<OrderSeatAssignments> consumer) {
         return context.getAsync(id, OrderSeatAssignments.class).thenAccept(orderSeatAssignments -> {
             consumer.accept(orderSeatAssignments);
         }).exceptionally(throwable -> {

@@ -22,7 +22,7 @@ import com.microsoft.conference.registration.domain.order.event.OrderSuccessed;
 import com.microsoft.conference.registration.domain.order.model.OrderStatus;
 import org.enodeframework.annotation.Event;
 import org.enodeframework.annotation.Subscribe;
-import org.enodeframework.commanding.ICommandService;
+import org.enodeframework.commanding.CommandBus;
 import org.enodeframework.common.io.Task;
 
 import java.util.concurrent.CompletableFuture;
@@ -43,9 +43,9 @@ import java.util.stream.Collectors;
 @Event
 public class RegistrationProcessManager {
 
-    private final ICommandService commandService;
+    private final CommandBus commandService;
 
-    public RegistrationProcessManager(ICommandService commandService) {
+    public RegistrationProcessManager(CommandBus commandService) {
         this.commandService = commandService;
     }
 

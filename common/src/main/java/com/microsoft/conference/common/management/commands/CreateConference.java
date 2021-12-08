@@ -2,13 +2,13 @@ package com.microsoft.conference.common.management.commands;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.enodeframework.commanding.Command;
+import org.enodeframework.commanding.AbstractCommandMessage;
 
 import java.util.Date;
 
 @Getter
 @Setter
-public class CreateConference extends Command<String> {
+public class CreateConference extends AbstractCommandMessage<String> {
     private String accessCode;
     private String ownerName;
     private String ownerEmail;

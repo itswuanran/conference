@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Import;
 @SpringBootApplication
 @EnableEnode
 @Import(value = {
-    ConferenceDataSourceConfiguration.class,
-    WebMvcConfiguration.class,
+        ConferenceDataSourceConfiguration.class,
+        WebMvcConfiguration.class,
 })
 public class PaymentsApplication {
     public static void main(String[] args) {

@@ -4,11 +4,11 @@ import com.microsoft.conference.registration.domain.SeatType;
 import com.microsoft.conference.registration.domain.seatassigning.model.Attendee;
 import lombok.Getter;
 import lombok.Setter;
-import org.enodeframework.eventing.DomainEvent;
+import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 @Getter
 @Setter
-public class SeatAssigned extends DomainEvent<String> {
+public class SeatAssigned extends AbstractDomainEventMessage<String> {
     private int position;
     private SeatType seatType;
     private Attendee attendee;

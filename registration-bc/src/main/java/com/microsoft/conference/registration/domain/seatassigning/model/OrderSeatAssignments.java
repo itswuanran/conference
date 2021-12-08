@@ -1,6 +1,6 @@
 package com.microsoft.conference.registration.domain.seatassigning.model;
 
-import com.microsoft.conference.common.Linq;
+import com.microsoft.conference.common.ListUtils;
 import com.microsoft.conference.common.exception.ArgumentOutOfRangeException;
 import com.microsoft.conference.registration.domain.order.model.OrderLine;
 import com.microsoft.conference.registration.domain.seatassigning.event.OrderSeatAssignmentsCreated;
@@ -8,19 +8,19 @@ import com.microsoft.conference.registration.domain.seatassigning.event.SeatAssi
 import com.microsoft.conference.registration.domain.seatassigning.event.SeatUnassigned;
 import org.enodeframework.common.utils.Assert;
 import org.enodeframework.common.utils.IdGenerator;
-import org.enodeframework.domain.AggregateRoot;
+import org.enodeframework.domain.AbstractAggregateRoot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderSeatAssignments extends AggregateRoot<String> {
+public class OrderSeatAssignments extends AbstractAggregateRoot<String> {
 
     private String orderId;
 
     private List<SeatAssignment> seatAssignments;
 
     public OrderSeatAssignments(String orderId, List<OrderLine> orderLines) {
-        super(IdGenerator.nextId());
+        super(IdGenerator.id());
         Assert.nonNull(orderId, "orderId");
         Assert.nonNull(orderLines, "orderLines");
         if (orderLines.isEmpty()) {
@@ -37,7 +37,7 @@ public class OrderSeatAssignments extends AggregateRoot<String> {
     }
 
     public void assignSeat(int position, Attendee attendee) {
-        SeatAssignment current = Linq.singleOrDefault(seatAssignments, x -> x.getPosition() == position);
+        SeatAssignment current = ListUtils.singleOrDefault(seatAssignments, x -> x.getPosition() == position);
         if (current == null) {
             throw new ArgumentOutOfRangeException("position");
         }
@@ -47,7 +47,7 @@ public class OrderSeatAssignments extends AggregateRoot<String> {
     }
 
     public void unAssignSeat(int position) {
-        SeatAssignment current = Linq.singleOrDefault(seatAssignments, x -> x.getPosition() == position);
+        SeatAssignment current = ListUtils.singleOrDefault(seatAssignments, x -> x.getPosition() == position);
         if (current == null) {
             throw new ArgumentOutOfRangeException("position");
         }
@@ -61,10 +61,10 @@ public class OrderSeatAssignments extends AggregateRoot<String> {
     }
 
     private void handle(SeatAssigned evnt) {
-        Linq.single(seatAssignments, x -> x.getPosition() == evnt.getPosition()).setAttendee(evnt.getAttendee());
+        ListUtils.single(seatAssignments, x -> x.getPosition() == evnt.getPosition()).setAttendee(evnt.getAttendee());
     }
 
     private void handle(SeatUnassigned evnt) {
-        Linq.single(seatAssignments, x -> x.getPosition() == evnt.getPosition()).setAttendee(null);
+        ListUtils.single(seatAssignments, x -> x.getPosition() == evnt.getPosition()).setAttendee(null);
     }
 }

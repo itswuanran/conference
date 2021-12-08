@@ -9,25 +9,12 @@ import com.microsoft.conference.common.registration.commands.order.PlaceOrder;
 import com.microsoft.conference.registration.domain.order.model.OrderStatus;
 import com.microsoft.conference.registration.readmodel.PayConvert;
 import com.microsoft.conference.registration.readmodel.RegistrationConvert;
-import com.microsoft.conference.registration.readmodel.service.ConferenceAlias;
-import com.microsoft.conference.registration.readmodel.service.ConferenceQueryService;
-import com.microsoft.conference.registration.readmodel.service.OrderQueryService;
-import com.microsoft.conference.registration.readmodel.service.OrderVO;
-import com.microsoft.conference.registration.readmodel.service.SeatTypeVO;
-import org.enodeframework.commanding.CommandResult;
-import org.enodeframework.commanding.CommandReturnType;
-import org.enodeframework.commanding.CommandStatus;
-import org.enodeframework.commanding.ICommand;
-import org.enodeframework.commanding.ICommandService;
+import com.microsoft.conference.registration.readmodel.service.*;
+import org.enodeframework.commanding.*;
 import org.enodeframework.common.io.Task;
 import org.enodeframework.common.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -42,7 +29,7 @@ public class RegistrationController {
     public String thirdPartyProcessorPayment = "thirdParty";
 
     @Autowired
-    private ICommandService commandService;
+    private CommandBus commandService;
     @Autowired
     private ConferenceQueryService conferenceQueryService;
     @Autowired
@@ -126,7 +113,7 @@ public class RegistrationController {
         String name = alias.getName();
         String description = "Payment for the order of " + name;
         CreatePayment createPayment = new CreatePayment();
-        createPayment.setAggregateRootId(IdGenerator.nextId());
+        createPayment.setAggregateRootId(IdGenerator.id());
         createPayment.setConferenceId(alias.getId());
         createPayment.setOrderId(order.getOrderId());
         createPayment.setDescription(description);
@@ -169,7 +156,7 @@ public class RegistrationController {
         return null;
     }
 
-    private CompletableFuture<Boolean> sendCommandAsync(ICommand command) {
+    private CompletableFuture<Boolean> sendCommandAsync(CommandMessage command) {
         return commandService.sendAsync(command);
     }
 
@@ -177,7 +164,7 @@ public class RegistrationController {
         return CommandStatus.Success.equals(result.getStatus());
     }
 
-    private CompletableFuture<CommandResult> executeCommandAsync(ICommand command) {
+    private CompletableFuture<CommandResult> executeCommandAsync(CommandMessage command) {
         return commandService.executeAsync(command, CommandReturnType.CommandExecuted);
     }
 
