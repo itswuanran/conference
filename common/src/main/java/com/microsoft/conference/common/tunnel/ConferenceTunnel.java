@@ -1,7 +1,6 @@
 package com.microsoft.conference.common.tunnel;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.microsoft.conference.common.dataobject.ConferenceDO;
 import com.microsoft.conference.common.mapper.ConferenceMapper;
 import org.springframework.stereotype.Component;
