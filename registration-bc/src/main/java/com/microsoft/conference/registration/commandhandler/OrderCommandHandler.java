@@ -8,8 +8,8 @@ import com.microsoft.conference.registration.domain.order.model.Order;
 import org.enodeframework.annotation.Command;
 import org.enodeframework.annotation.Subscribe;
 import org.enodeframework.commanding.CommandContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 @Command
 public class OrderCommandHandler {
 
-    @Resource
+    @Autowired
     private PricingService pricingService;
 
     @Subscribe

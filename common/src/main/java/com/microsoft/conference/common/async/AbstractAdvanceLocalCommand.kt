@@ -1,6 +1,5 @@
-package com.alibaba.c2m.smartlinker.command
+package com.microsoft.conference.common.async
 
-import com.microsoft.conference.common.async.AbstractAsyncCommand
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.processors.ReplayProcessor
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +14,7 @@ import org.jetbrains.annotations.NotNull
  * @param <R> 返回的本地对象
  * @param <T> RPC返回的结果
  */
-abstract class AbstractAdvanceLocalCommand<T, R> : AbstractAsyncCommand<R>() {
+abstract class AbstractAdvanceLocalCommand<T, R : Any> : AbstractAsyncCommand<R>() {
 
     override fun construct(): Flowable<R> {
         val subject: ReplayProcessor<R> = ReplayProcessor.createWithSize(1)
