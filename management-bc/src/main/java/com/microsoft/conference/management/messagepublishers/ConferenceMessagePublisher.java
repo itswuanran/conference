@@ -9,8 +9,8 @@ import org.enodeframework.annotation.Event;
 import org.enodeframework.annotation.Subscribe;
 import org.enodeframework.messaging.ApplicationMessage;
 import org.enodeframework.messaging.MessagePublisher;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Resource;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Event
 public class ConferenceMessagePublisher {
 
-    @Resource
+    @Autowired
     private MessagePublisher<ApplicationMessage> messagePublisher;
 
     @Subscribe

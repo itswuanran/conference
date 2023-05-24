@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.KafkaConsumerBackoffManager;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
-import org.springframework.kafka.listener.adapter.RetryingMessageListenerAdapter;
 import org.springframework.retry.support.RetryTemplate;
 
 import java.util.HashMap;
@@ -74,19 +74,17 @@ public class KafkaEventConfig {
     public KafkaMessageListenerContainer<String, String> domainEventListenerContainer(RetryTemplate retryTemplate) {
         ContainerProperties properties = new ContainerProperties(eventTopic);
         properties.setGroupId(DEFAULT_CONSUMER_GROUP0);
-        RetryingMessageListenerAdapter<String, String> listenerAdapter = new RetryingMessageListenerAdapter<>(kafkaDomainEventListener, retryTemplate);
-        properties.setMessageListener(listenerAdapter);
+        properties.setMessageListener(kafkaDomainEventListener);
         properties.setMissingTopicsFatal(false);
         properties.setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         return new KafkaMessageListenerContainer<>(consumerFactory(), properties);
     }
 
     @Bean
-    public KafkaMessageListenerContainer<String, String> commandListenerContainer(RetryTemplate retryTemplate) {
+    public KafkaMessageListenerContainer<String, String> commandListenerContainer(KafkaConsumerBackoffManager retryTemplate) {
         ContainerProperties properties = new ContainerProperties(commandTopic);
         properties.setGroupId(DEFAULT_CONSUMER_GROUP0);
-        RetryingMessageListenerAdapter<String, String> listenerAdapter = new RetryingMessageListenerAdapter<>(kafkaCommandListener, retryTemplate);
-        properties.setMessageListener(listenerAdapter);
+        properties.setMessageListener(kafkaCommandListener);
         properties.setMissingTopicsFatal(false);
         properties.setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         return new KafkaMessageListenerContainer<>(consumerFactory(), properties);
@@ -96,8 +94,7 @@ public class KafkaEventConfig {
     public KafkaMessageListenerContainer<String, String> applicationMessageListenerContainer(RetryTemplate retryTemplate) {
         ContainerProperties properties = new ContainerProperties(applicationTopic);
         properties.setGroupId(DEFAULT_CONSUMER_GROUP0);
-        RetryingMessageListenerAdapter<String, String> listenerAdapter = new RetryingMessageListenerAdapter<>(kafkaApplicationMessageListener, retryTemplate);
-        properties.setMessageListener(listenerAdapter);
+        properties.setMessageListener(kafkaApplicationMessageListener);
         properties.setMissingTopicsFatal(false);
         properties.setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         return new KafkaMessageListenerContainer<>(consumerFactory(), properties);
@@ -107,8 +104,7 @@ public class KafkaEventConfig {
     public KafkaMessageListenerContainer<String, String> publishableExceptionListenerContainer(RetryTemplate retryTemplate) {
         ContainerProperties properties = new ContainerProperties(exceptionTopic);
         properties.setGroupId(DEFAULT_CONSUMER_GROUP0);
-        RetryingMessageListenerAdapter<String, String> listenerAdapter = new RetryingMessageListenerAdapter<>(kafkaPublishableExceptionListener, retryTemplate);
-        properties.setMessageListener(listenerAdapter);
+        properties.setMessageListener(kafkaPublishableExceptionListener);
         properties.setMissingTopicsFatal(false);
         properties.setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         return new KafkaMessageListenerContainer<>(consumerFactory(), properties);

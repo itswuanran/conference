@@ -15,32 +15,38 @@
         <module>payments-bc</module>
     </modules>
     <properties>
-        <mybatis-plus.version>3.4.2</mybatis-plus.version>
-        <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
-        <lombok.version>1.18.20</lombok.version>
-        <enode.version>1.1.3</enode.version>
         <revision>1.0.0</revision>
         <maven.skip.deploy>false</maven.skip.deploy>
-        <maven.jar.version>3.2.0</maven.jar.version>
-        <maven.surefire.version>2.22.2</maven.surefire.version>
-        <maven.deploy.version>2.8.2</maven.deploy.version>
-        <maven.compiler.version>3.8.1</maven.compiler.version>
-        <maven.source.version>3.2.1</maven.source.version>
-        <maven.war.version>3.2.3</maven.war.version>
-        <maven.javadoc.version>3.2.0</maven.javadoc.version>
+        <maven.jar.version>3.3.0</maven.jar.version>
+        <maven.surefire.version>3.1.0</maven.surefire.version>
+        <maven.deploy.version>3.1.1</maven.deploy.version>
+        <maven.compiler.version>3.11.0</maven.compiler.version>
+        <maven.source.version>3.3.0</maven.source.version>
+        <maven.resources.version>3.3.1</maven.resources.version>
+        <maven.war.version>3.3.2</maven.war.version>
+        <maven.javadoc.version>3.5.0</maven.javadoc.version>
         <maven.gpg.version>1.6</maven.gpg.version>
-        <maven.flatten.version>1.2.7</maven.flatten.version>
-        <dokka.version>1.4.32</dokka.version>
-        <slfj4.version>1.7.30</slfj4.version>
-        <guava.version>30.1.1-jre</guava.version>
-        <jackson.version>2.12.3</jackson.version>
+        <maven.flatten.version>1.5.0</maven.flatten.version>
+        <enode.version>1.1.4</enode.version>
+        <dokka.version>1.8.10</dokka.version>
+        <slfj4.version>1.7.36</slfj4.version>
+        <guava.version>31.1-jre</guava.version>
+        <jackson.version>2.15.1</jackson.version>
         <junit.version>4.13.2</junit.version>
         <jmh.version>1.29</jmh.version>
-        <kotlin.version>1.5.31</kotlin.version>
-        <mysql.version>8.0.24</mysql.version>
-        <reflections.version>0.9.12</reflections.version>
-        <vertx.version>4.2.1</vertx.version>
-        <spring-boot.version>2.4.5</spring-boot.version>
+        <kotlin.version>1.8.21</kotlin.version>
+        <mysql.version>8.0.33</mysql.version>
+        <reflections.version>0.10.2</reflections.version>
+        <vertx.version>4.4.2</vertx.version>
+        <spring-boot.version>3.1.0</spring-boot.version>
+        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
+        <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <lombok.version>1.18.26</lombok.version>
+        <rxjava.version>3.1.6</rxjava.version>
+        <joda.version>2.12.5</joda.version>
+        <springdoc.version>1.7.0</springdoc.version>
+        <sentinel.version>1.8.6</sentinel.version>
+        <snakeyaml.version>2.0</snakeyaml.version>
     </properties>
 
     <dependencyManagement>
@@ -92,22 +98,27 @@
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-ui</artifactId>
-                <version>1.5.8</version>
+                <version>${springdoc.version}</version>
             </dependency>
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
-                <version>2.10.10</version>
+                <version>${joda.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.reactivex.rxjava3</groupId>
                 <artifactId>rxjava</artifactId>
-                <version>3.1.0</version>
+                <version>${rxjava.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba.csp</groupId>
                 <artifactId>sentinel-core</artifactId>
-                <version>1.8.2</version>
+                <version>${sentinel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

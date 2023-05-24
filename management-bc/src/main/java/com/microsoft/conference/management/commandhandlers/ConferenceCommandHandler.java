@@ -6,8 +6,8 @@ import com.microsoft.conference.management.domain.service.RegisterConferenceSlug
 import org.enodeframework.annotation.Command;
 import org.enodeframework.annotation.Subscribe;
 import org.enodeframework.commanding.CommandContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Resource;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Command
 public class ConferenceCommandHandler {
 
-    @Resource
+    @Autowired
     private RegisterConferenceSlugService registerConferenceSlugService;
 
     @Subscribe

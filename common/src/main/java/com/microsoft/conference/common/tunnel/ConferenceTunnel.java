@@ -3,9 +3,9 @@ package com.microsoft.conference.common.tunnel;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.microsoft.conference.common.dataobject.ConferenceDO;
 import com.microsoft.conference.common.mapper.ConferenceMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class ConferenceTunnel {
 
-    @Resource
+    @Autowired
     private ConferenceMapper conferenceMapper;
 
     public CompletableFuture<Integer> updateAsync(ConferenceDO conferenceDO, LambdaUpdateWrapper<ConferenceDO> updateWrapper) {

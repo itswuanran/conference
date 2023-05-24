@@ -2,7 +2,6 @@ package com.microsoft.conference.common;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,13 +26,4 @@ public class ExceptionHandlingControllerAdvice {
         String errors = exception.getFieldErrors().stream().map(e -> e.getField() + e.getDefaultMessage()).collect(Collectors.joining(","));
         return ActionResult.error("500", errors);
     }
-
-    @ResponseBody
-    @ExceptionHandler(value = MissingServletRequestParameterException.class)
-    public ActionResult errorMissingServletRequestParameterException(
-            MissingServletRequestParameterException exception) {
-        log.error("MissingServletRequestParameterException", exception);
-        return ActionResult.error("500", exception.getMessage());
-    }
-
 }

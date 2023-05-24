@@ -1,6 +1,6 @@
 package com.microsoft.conference.common.tunnel;
 
-import com.alibaba.c2m.smartlinker.command.AbstractAdvanceLocalCommand;
+import com.microsoft.conference.common.async.AbstractAdvanceLocalCommand;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.microsoft.conference.common.dataobject.ConferenceDO;
 import com.microsoft.conference.common.mapper.ConferenceMapper;
