@@ -6,7 +6,7 @@ import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 @Getter
 @Setter
-public abstract class OrderEvent extends AbstractDomainEventMessage<String> {
+public abstract class OrderEvent extends AbstractDomainEventMessage {
     private String conferenceId;
 
     public OrderEvent() {

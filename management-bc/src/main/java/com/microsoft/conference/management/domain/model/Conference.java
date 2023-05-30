@@ -8,7 +8,7 @@ import org.enodeframework.domain.AbstractAggregateRoot;
 
 import java.util.*;
 
-public class Conference extends AbstractAggregateRoot<String> {
+public class Conference extends AbstractAggregateRoot {
     private ConferenceInfo conferenceInfo;
     private List<SeatType> seatTypes;
     private Map<String, List<ReservationItem>> reservationsMap;

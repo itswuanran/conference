@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class OrderSeatAssignmentsCreated extends AbstractDomainEventMessage<String> {
+public class OrderSeatAssignmentsCreated extends AbstractDomainEventMessage {
     private String orderId;
 
     private List<SeatAssignment> seatAssignments;

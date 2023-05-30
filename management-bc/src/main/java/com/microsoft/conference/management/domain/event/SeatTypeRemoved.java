@@ -6,7 +6,7 @@ import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 @Getter
 @Setter
-public class SeatTypeRemoved extends AbstractDomainEventMessage<String> {
+public class SeatTypeRemoved extends AbstractDomainEventMessage {
     private String seatTypeId;
 
     public SeatTypeRemoved() {

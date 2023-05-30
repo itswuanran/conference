@@ -8,6 +8,7 @@ import org.enodeframework.annotation.Event;
 import org.enodeframework.annotation.Subscribe;
 import org.enodeframework.messaging.ApplicationMessage;
 import org.enodeframework.messaging.MessagePublisher;
+import org.enodeframework.queue.SendMessageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.CompletableFuture;
@@ -23,7 +24,7 @@ public class PaymentMessagePublisher {
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(PaymentCompleted evnt) {
+    public CompletableFuture<SendMessageResult> handleAsync(PaymentCompleted evnt) {
         PaymentCompletedMessage message = new PaymentCompletedMessage();
         message.paymentId = evnt.getAggregateRootId();
         message.conferenceId = evnt.getConferenceId();
@@ -32,7 +33,7 @@ public class PaymentMessagePublisher {
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(PaymentRejected evnt) {
+    public CompletableFuture<SendMessageResult> handleAsync(PaymentRejected evnt) {
         PaymentRejectedMessage message = new PaymentRejectedMessage();
         message.paymentId = evnt.getAggregateRootId();
         message.conferenceId = evnt.getConferenceId();

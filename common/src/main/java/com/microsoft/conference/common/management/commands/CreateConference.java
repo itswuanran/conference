@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class CreateConference extends AbstractCommandMessage<String> {
+public class CreateConference extends AbstractCommandMessage {
     private String accessCode;
     private String ownerName;
     private String ownerEmail;

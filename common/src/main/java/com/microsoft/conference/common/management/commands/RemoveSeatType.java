@@ -6,7 +6,7 @@ import org.enodeframework.commanding.AbstractCommandMessage;
 
 @Getter
 @Setter
-public class RemoveSeatType extends AbstractCommandMessage<String> {
+public class RemoveSeatType extends AbstractCommandMessage {
     private String seatTypeId;
 
     public RemoveSeatType() {

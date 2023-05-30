@@ -7,7 +7,7 @@ import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 @Getter
 @Setter
-public class PaymentCompleted extends AbstractDomainEventMessage<String> {
+public class PaymentCompleted extends AbstractDomainEventMessage {
     private String orderId;
     private String conferenceId;
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class SeatsReservationCancelled extends AbstractDomainEventMessage<String> {
+public class SeatsReservationCancelled extends AbstractDomainEventMessage {
     private String reservationId;
     private List<SeatAvailableQuantity> seatAvailableQuantities;
 

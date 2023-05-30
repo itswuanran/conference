@@ -5,7 +5,7 @@ import org.enodeframework.commanding.AbstractCommandMessage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MakeSeatReservation extends AbstractCommandMessage<String> {
+public class MakeSeatReservation extends AbstractCommandMessage {
     public String reservationId;
     public List<SeatReservationItemInfo> seats;
 

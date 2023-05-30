@@ -4,7 +4,7 @@ import lombok.Data;
 import org.enodeframework.commanding.AbstractCommandMessage;
 
 @Data
-public class AssignRegistrantDetails extends AbstractCommandMessage<String> {
+public class AssignRegistrantDetails extends AbstractCommandMessage {
     private String firstName;
     private String lastName;
     private String email;

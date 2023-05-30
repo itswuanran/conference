@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PaymentInitiated extends AbstractDomainEventMessage<String> {
+public class PaymentInitiated extends AbstractDomainEventMessage {
     private String orderId;
     private String conferenceId;
     private String description;

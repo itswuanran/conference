@@ -9,6 +9,7 @@ import org.enodeframework.annotation.Event;
 import org.enodeframework.annotation.Subscribe;
 import org.enodeframework.messaging.ApplicationMessage;
 import org.enodeframework.messaging.MessagePublisher;
+import org.enodeframework.queue.SendMessageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.CompletableFuture;
@@ -27,7 +28,7 @@ public class ConferenceMessagePublisher {
     private MessagePublisher<ApplicationMessage> messagePublisher;
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(SeatsReserved evnt) {
+    public CompletableFuture<SendMessageResult> handleAsync(SeatsReserved evnt) {
         SeatsReservedMessage message = new SeatsReservedMessage();
         message.conferenceId = evnt.getAggregateRootId();
         message.reservationId = evnt.getReservationId();
@@ -41,7 +42,7 @@ public class ConferenceMessagePublisher {
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(SeatsReservationCommitted evnt) {
+    public CompletableFuture<SendMessageResult> handleAsync(SeatsReservationCommitted evnt) {
         SeatsReservationCommittedMessage message = new SeatsReservationCommittedMessage();
         message.conferenceId = evnt.getAggregateRootId();
         message.reservationId = evnt.getReservationId();
@@ -49,7 +50,7 @@ public class ConferenceMessagePublisher {
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(SeatsReservationCancelled evnt) {
+    public CompletableFuture<SendMessageResult> handleAsync(SeatsReservationCancelled evnt) {
         SeatsReservationCancelledMessage message = new SeatsReservationCancelledMessage();
         message.conferenceId = evnt.getAggregateRootId();
         message.reservationId = evnt.getReservationId();
@@ -57,7 +58,7 @@ public class ConferenceMessagePublisher {
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(SeatInsufficientException exception) {
+    public CompletableFuture<SendMessageResult> handleAsync(SeatInsufficientException exception) {
         SeatInsufficientMessage message = new SeatInsufficientMessage();
         message.conferenceId = exception.conferenceId;
         message.reservationId = exception.reservationId;

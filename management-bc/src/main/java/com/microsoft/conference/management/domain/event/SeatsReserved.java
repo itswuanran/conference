@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class SeatsReserved extends AbstractDomainEventMessage<String> {
+public class SeatsReserved extends AbstractDomainEventMessage {
     private String reservationId;
     private List<ReservationItem> reservationItems;
     private List<SeatAvailableQuantity> seatAvailableQuantities;

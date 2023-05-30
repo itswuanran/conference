@@ -9,7 +9,7 @@ import org.enodeframework.domain.AbstractAggregateRoot;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Payment extends AbstractAggregateRoot<String> {
+public class Payment extends AbstractAggregateRoot {
     private String orderId;
     private String conferenceId;
     private int state;

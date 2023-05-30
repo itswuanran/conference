@@ -27,7 +27,7 @@
         <maven.javadoc.version>3.5.0</maven.javadoc.version>
         <maven.gpg.version>1.6</maven.gpg.version>
         <maven.flatten.version>1.5.0</maven.flatten.version>
-        <enode.version>1.1.4</enode.version>
+        <enode.version>1.1.5</enode.version>
         <dokka.version>1.8.10</dokka.version>
         <slfj4.version>1.7.36</slfj4.version>
         <guava.version>31.1-jre</guava.version>

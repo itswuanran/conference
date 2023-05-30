@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PlaceOrder extends AbstractCommandMessage<String> {
+public class PlaceOrder extends AbstractCommandMessage {
     private String conferenceId;
     private List<SeatInfo> seatInfos;
 

@@ -13,7 +13,7 @@ import org.enodeframework.domain.AbstractAggregateRoot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderSeatAssignments extends AbstractAggregateRoot<String> {
+public class OrderSeatAssignments extends AbstractAggregateRoot {
 
     private String orderId;
 

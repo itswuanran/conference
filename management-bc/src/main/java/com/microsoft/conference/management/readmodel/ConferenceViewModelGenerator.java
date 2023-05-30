@@ -38,7 +38,7 @@ import java.util.concurrent.CompletableFuture;
 @Event
 public class ConferenceViewModelGenerator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConferenceViewModelGenerator.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(ConferenceViewModelGenerator.class);
 
     @Autowired
     private ConferenceMapper conferenceMapper;

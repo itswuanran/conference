@@ -6,7 +6,7 @@ import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 @Getter
 @Setter
-public class SeatTypeQuantityChanged extends AbstractDomainEventMessage<String> {
+public class SeatTypeQuantityChanged extends AbstractDomainEventMessage {
     private String seatTypeId;
     private int quantity;
     private int availableQuantity;

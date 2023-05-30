@@ -8,7 +8,7 @@ import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 @Getter
 @Setter
-public class SeatAssigned extends AbstractDomainEventMessage<String> {
+public class SeatAssigned extends AbstractDomainEventMessage {
     private int position;
     private SeatType seatType;
     private Attendee attendee;

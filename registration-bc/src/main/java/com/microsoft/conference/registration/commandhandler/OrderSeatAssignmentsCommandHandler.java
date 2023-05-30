@@ -18,7 +18,7 @@ public class OrderSeatAssignmentsCommandHandler {
 
     @Subscribe
     public CompletableFuture<Boolean> handleAsync(CommandContext context, CreateSeatAssignments command) {
-        return context.getAsync(command.aggregateRootId, Order.class).thenCompose(order -> {
+        return context.getAsync(command.getAggregateRootId(), Order.class).thenCompose(order -> {
             OrderSeatAssignments orderSeatAssignments = order.createSeatAssignments();
             return context.addAsync(orderSeatAssignments);
         });
@@ -26,7 +26,7 @@ public class OrderSeatAssignmentsCommandHandler {
 
     @Subscribe
     public CompletableFuture<Void> handleAsync(CommandContext context, AssignSeat command) {
-        return orderSeatHandler(context, command.aggregateRootId, orderSeatAssignments -> {
+        return orderSeatHandler(context, command.getAggregateRootId(), orderSeatAssignments -> {
             orderSeatAssignments.assignSeat(command.getPosition(), new Attendee(
                     command.getPersonalInfo().getFirstName(),
                     command.getPersonalInfo().getLastName(),
@@ -36,7 +36,7 @@ public class OrderSeatAssignmentsCommandHandler {
 
     @Subscribe
     public CompletableFuture<Void> handleAsync(CommandContext context, UnassignSeat command) {
-        return orderSeatHandler(context, command.aggregateRootId, orderSeatAssignments -> {
+        return orderSeatHandler(context, command.getAggregateRootId(), orderSeatAssignments -> {
             orderSeatAssignments.unAssignSeat(command.getPosition());
         });
     }

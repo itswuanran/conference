@@ -12,7 +12,7 @@ import org.enodeframework.domain.AbstractAggregateRoot;
 import java.util.Date;
 import java.util.List;
 
-public class Order extends AbstractAggregateRoot<String> {
+public class Order extends AbstractAggregateRoot {
     private OrderTotal total;
     private String conferenceId;
     private OrderStatus status;

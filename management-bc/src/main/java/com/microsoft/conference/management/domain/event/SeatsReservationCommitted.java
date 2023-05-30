@@ -5,7 +5,7 @@ import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 import java.util.List;
 
-public class SeatsReservationCommitted extends AbstractDomainEventMessage<String> {
+public class SeatsReservationCommitted extends AbstractDomainEventMessage {
     private String reservationId;
     private List<SeatQuantity> seatQuantities;
 

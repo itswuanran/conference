@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class OrderPlaced extends AbstractDomainEventMessage<String> {
+public class OrderPlaced extends AbstractDomainEventMessage {
     private String conferenceId;
     private OrderTotal orderTotal;
     private Date reservationExpirationDate;

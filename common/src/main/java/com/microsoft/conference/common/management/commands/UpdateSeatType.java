@@ -4,7 +4,7 @@ import org.enodeframework.commanding.AbstractCommandMessage;
 
 import java.math.BigDecimal;
 
-public class UpdateSeatType extends AbstractCommandMessage<String> {
+public class UpdateSeatType extends AbstractCommandMessage {
     public String seatTypeId;
     public String name;
     public String description;

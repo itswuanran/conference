@@ -24,6 +24,7 @@ import org.enodeframework.annotation.Event;
 import org.enodeframework.annotation.Subscribe;
 import org.enodeframework.commanding.CommandBus;
 import org.enodeframework.common.io.Task;
+import org.enodeframework.queue.SendMessageResult;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -50,7 +51,7 @@ public class RegistrationProcessManager {
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(OrderPlaced evnt) {
+    public CompletableFuture<SendMessageResult> handleAsync(OrderPlaced evnt) {
         MakeSeatReservation reservation = new MakeSeatReservation(evnt.getConferenceId());
         reservation.reservationId = evnt.getAggregateRootId();
         reservation.seats = evnt.getOrderTotal().getOrderLines().stream().map(x -> {
@@ -63,27 +64,27 @@ public class RegistrationProcessManager {
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(SeatsReservedMessage message) {
+    public CompletableFuture<SendMessageResult> handleAsync(SeatsReservedMessage message) {
         return (commandService.sendAsync(new ConfirmReservation(message.reservationId, true)));
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(SeatInsufficientMessage message) {
+    public CompletableFuture<SendMessageResult> handleAsync(SeatInsufficientMessage message) {
         return (commandService.sendAsync(new ConfirmReservation(message.reservationId, false)));
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(PaymentCompletedMessage message) {
+    public CompletableFuture<SendMessageResult> handleAsync(PaymentCompletedMessage message) {
         return (commandService.sendAsync(new ConfirmPayment(message.orderId, true)));
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(PaymentRejectedMessage message) {
+    public CompletableFuture<SendMessageResult> handleAsync(PaymentRejectedMessage message) {
         return (commandService.sendAsync(new ConfirmPayment(message.orderId, false)));
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(OrderPaymentConfirmed evnt) {
+    public CompletableFuture handleAsync(OrderPaymentConfirmed evnt) {
         if (OrderStatus.PaymentSuccess == evnt.getOrderStatus()) {
             return (commandService.sendAsync(new CommitSeatReservation(evnt.getConferenceId(), evnt.getAggregateRootId())));
         } else if (evnt.getOrderStatus() == OrderStatus.PaymentRejected) {
@@ -93,22 +94,22 @@ public class RegistrationProcessManager {
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(SeatsReservationCommittedMessage message) {
+    public CompletableFuture<SendMessageResult> handleAsync(SeatsReservationCommittedMessage message) {
         return (commandService.sendAsync(new MarkAsSuccess(message.reservationId)));
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(SeatsReservationCancelledMessage message) {
+    public CompletableFuture<SendMessageResult> handleAsync(SeatsReservationCancelledMessage message) {
         return (commandService.sendAsync(new CloseOrder(message.reservationId)));
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(OrderSuccessed evnt) {
+    public CompletableFuture<SendMessageResult> handleAsync(OrderSuccessed evnt) {
         return (commandService.sendAsync(new CreateSeatAssignments(evnt.getAggregateRootId())));
     }
 
     @Subscribe
-    public CompletableFuture<Boolean> handleAsync(OrderExpired evnt) {
+    public CompletableFuture<SendMessageResult> handleAsync(OrderExpired evnt) {
         return (commandService.sendAsync(new CancelSeatReservation(evnt.getConferenceId(), evnt.getAggregateRootId())));
     }
 }

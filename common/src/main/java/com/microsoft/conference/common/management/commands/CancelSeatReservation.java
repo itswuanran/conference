@@ -2,7 +2,7 @@ package com.microsoft.conference.common.management.commands;
 
 import org.enodeframework.commanding.AbstractCommandMessage;
 
-public class CancelSeatReservation extends AbstractCommandMessage<String> {
+public class CancelSeatReservation extends AbstractCommandMessage {
     public String reservationId;
 
     public CancelSeatReservation() {

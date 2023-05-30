@@ -3,7 +3,7 @@ package com.microsoft.conference.management.domain.event;
 import com.microsoft.conference.management.domain.model.ConferenceEditableInfo;
 import org.enodeframework.eventing.AbstractDomainEventMessage;
 
-public class ConferenceUpdated extends AbstractDomainEventMessage<String> {
+public class ConferenceUpdated extends AbstractDomainEventMessage {
     private ConferenceEditableInfo info;
 
     public ConferenceUpdated() {

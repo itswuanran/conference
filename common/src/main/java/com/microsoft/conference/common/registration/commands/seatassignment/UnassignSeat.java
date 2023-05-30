@@ -4,7 +4,7 @@ import lombok.Data;
 import org.enodeframework.commanding.AbstractCommandMessage;
 
 @Data
-public class UnassignSeat extends AbstractCommandMessage<String> {
+public class UnassignSeat extends AbstractCommandMessage {
     private int position;
 
     public UnassignSeat() {

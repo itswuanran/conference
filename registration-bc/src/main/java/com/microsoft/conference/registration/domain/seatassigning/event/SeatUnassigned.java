@@ -6,7 +6,7 @@ import org.enodeframework.eventing.AbstractDomainEventMessage;
 
 @Getter
 @Setter
-public class SeatUnassigned extends AbstractDomainEventMessage<String> {
+public class SeatUnassigned extends AbstractDomainEventMessage {
     private int position;
 
     public SeatUnassigned() {

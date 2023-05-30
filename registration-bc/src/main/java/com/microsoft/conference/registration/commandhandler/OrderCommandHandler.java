@@ -26,7 +26,7 @@ public class OrderCommandHandler {
         List<SeatQuantity> seats = new ArrayList<>();
         command.getSeatInfos().forEach(x -> seats.add(new SeatQuantity(new SeatType(x.seatType, x.seatName, x.unitPrice), x.quantity)));
         return context.addAsync(new Order(
-                command.aggregateRootId,
+                command.getAggregateRootId(),
                 command.getConferenceId(),
                 seats,
                 pricingService));
@@ -34,35 +34,35 @@ public class OrderCommandHandler {
 
     @Subscribe
     public CompletableFuture<Void> handleAsync(CommandContext context, AssignRegistrantDetails command) {
-        return orderHandle(context, command.aggregateRootId, order -> {
+        return orderHandle(context, command.getAggregateRootId(), order -> {
             order.assignRegistrant(command.getFirstName(), command.getLastName(), command.getEmail());
         });
     }
 
     @Subscribe
     public CompletableFuture<Void> handleAsync(CommandContext context, ConfirmReservation command) {
-        return context.getAsync(command.aggregateRootId, Order.class).thenAccept(order -> {
+        return context.getAsync(command.getAggregateRootId(), Order.class).thenAccept(order -> {
             order.confirmReservation(command.isReservationSuccess);
         });
     }
 
     @Subscribe
     public CompletableFuture<Void> handleAsync(CommandContext context, ConfirmPayment command) {
-        return context.getAsync(command.aggregateRootId, Order.class).thenAccept(order -> {
+        return context.getAsync(command.getAggregateRootId(), Order.class).thenAccept(order -> {
             order.confirmPayment(command.isPaymentSuccess);
         });
     }
 
     @Subscribe
     public CompletableFuture<Void> handleAsync(CommandContext context, MarkAsSuccess command) {
-        return context.getAsync(command.aggregateRootId, Order.class).thenAccept(order -> {
+        return context.getAsync(command.getAggregateRootId(), Order.class).thenAccept(order -> {
             order.markAsSuccess();
         });
     }
 
     @Subscribe
     public CompletableFuture<Void> handleAsync(CommandContext context, CloseOrder command) {
-        return context.getAsync(command.aggregateRootId, Order.class).thenAccept(order -> {
+        return context.getAsync(command.getAggregateRootId(), Order.class).thenAccept(order -> {
             order.close();
         });
     }

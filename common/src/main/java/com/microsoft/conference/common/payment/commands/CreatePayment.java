@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CreatePayment extends AbstractCommandMessage<String> {
+public class CreatePayment extends AbstractCommandMessage {
     private String orderId;
     private String conferenceId;
     private String description;

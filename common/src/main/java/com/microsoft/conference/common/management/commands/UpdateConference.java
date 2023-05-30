@@ -4,7 +4,7 @@ import org.enodeframework.commanding.AbstractCommandMessage;
 
 import java.util.Date;
 
-public class UpdateConference extends AbstractCommandMessage<String> {
+public class UpdateConference extends AbstractCommandMessage {
     public String name;
     public String description;
     public String location;

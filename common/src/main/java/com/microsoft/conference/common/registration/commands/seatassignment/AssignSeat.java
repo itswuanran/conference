@@ -7,7 +7,7 @@ import org.enodeframework.commanding.AbstractCommandMessage;
 
 @Getter
 @Setter
-public class AssignSeat extends AbstractCommandMessage<String> {
+public class AssignSeat extends AbstractCommandMessage {
     private int position;
     private PersonalInfo personalInfo;
 

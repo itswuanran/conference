@@ -13,6 +13,7 @@ import com.microsoft.conference.registration.readmodel.service.*;
 import org.enodeframework.commanding.*;
 import org.enodeframework.common.io.Task;
 import org.enodeframework.common.utils.IdGenerator;
+import org.enodeframework.queue.SendMessageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -156,7 +157,7 @@ public class RegistrationController {
         return null;
     }
 
-    private CompletableFuture<Boolean> sendCommandAsync(CommandMessage command) {
+    private CompletableFuture<SendMessageResult> sendCommandAsync(CommandMessage command) {
         return commandService.sendAsync(command);
     }
 
