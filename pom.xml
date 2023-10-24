@@ -27,30 +27,45 @@
         <maven.javadoc.version>3.5.0</maven.javadoc.version>
         <maven.gpg.version>1.6</maven.gpg.version>
         <maven.flatten.version>1.5.0</maven.flatten.version>
-        <enode.version>1.1.5</enode.version>
-        <dokka.version>1.8.10</dokka.version>
-        <slfj4.version>1.7.36</slfj4.version>
+        <enode.version>1.1.10</enode.version>
+        <dokka.version>1.9.10</dokka.version>
+        <slfj4.version>2.0.9</slfj4.version>
         <guava.version>31.1-jre</guava.version>
         <jackson.version>2.15.1</jackson.version>
         <junit.version>4.13.2</junit.version>
         <jmh.version>1.29</jmh.version>
-        <kotlin.version>1.8.21</kotlin.version>
-        <mysql.version>8.0.33</mysql.version>
+        <mysql.version>8.1.0</mysql.version>
         <reflections.version>0.10.2</reflections.version>
-        <vertx.version>4.4.2</vertx.version>
-        <spring-boot.version>3.1.0</spring-boot.version>
+        <kotlin.version>1.9.10</kotlin.version>
+        <kotlinx-coroutines.version>1.7.3</kotlinx-coroutines.version>
+        <vertx.version>4.4.6</vertx.version>
+        <spring-boot.version>3.1.5</spring-boot.version>
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-        <lombok.version>1.18.26</lombok.version>
-        <rxjava.version>3.1.6</rxjava.version>
+        <lombok.version>1.18.30</lombok.version>
+        <rxjava.version>3.1.8</rxjava.version>
         <joda.version>2.12.5</joda.version>
         <springdoc.version>1.7.0</springdoc.version>
         <sentinel.version>1.8.6</sentinel.version>
-        <snakeyaml.version>2.0</snakeyaml.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-bom</artifactId>
+                <version>${kotlin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlinx</groupId>
+                <artifactId>kotlinx-coroutines-bom</artifactId>
+                <version>${kotlinx-coroutines.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.enodeframework</groupId>
                 <artifactId>enode-dependencies-bom</artifactId>
@@ -120,6 +135,7 @@
                 <artifactId>snakeyaml</artifactId>
                 <version>${snakeyaml.version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -175,6 +191,17 @@
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -189,11 +216,6 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>${project.basedir}/src/main/java</sourceDir>
-                            </sourceDirs>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>test-compile</id>
@@ -201,11 +223,6 @@
                         <goals>
                             <goal>test-compile</goal>
                         </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>${project.basedir}/src/test/java</sourceDir>
-                            </sourceDirs>
-                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
@@ -288,6 +305,9 @@
                 <version>${maven.surefire.version}</version>
                 <configuration>
                     <skipTests>true</skipTests>
+                    <argLine>--add-opens java.base/sun.net=ALL-UNNAMED</argLine>
+                    <argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+                    <argLine>--add-opens java.base/java.util=ALL-UNNAMED</argLine>
                 </configuration>
             </plugin>
             <plugin>

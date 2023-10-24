@@ -2,7 +2,7 @@ package com.microsoft.conference.common.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.enodeframework.kafka.KafkaMessageListener;
+import org.enodeframework.kafka.message.KafkaMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
